@@ -1,4 +1,4 @@
-from analyzer import analyzer 
+from analyzer import analyzer
 
 if __name__ == "__main__":
   analyzer = analyzer.Analyzer()

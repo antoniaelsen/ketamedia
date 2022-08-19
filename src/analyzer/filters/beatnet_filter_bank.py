@@ -26,6 +26,14 @@ class BeatNetFilterBank:
     window_hop_length,
     filter_bank_bands
   ):
+    print(f'Processor | sample_rate: {sample_rate}')
+    print(f'Processor | window_length: {window_length}')
+    print(f'Processor | window_hop_length: {window_hop_length}')
+    print(f'Processor | filter_bank_bands: {filter_bank_bands}')
+    # self.sample_rate = sample_rate
+    # self.window_length = window_length
+    # self.window_hop_length = window_hop_length
+
     sig = SignalProcessor(sample_rate=sample_rate, num_channels=1, window_length=window_length)
 
     # Window function (Hann?)
@@ -34,7 +42,7 @@ class BeatNetFilterBank:
       hop_size=window_hop_length,
       num_frames=4
     )
-  
+
     stft = ShortTimeFourierTransformProcessor()
 
     # Filter bank
@@ -44,7 +52,7 @@ class BeatNetFilterBank:
       fmax=FILTER_FREQ_MAX,
       norm_filters=True,
     )
-  
+
     log_spec = LogarithmicSpectrogramProcessor(mul=1, add=1)
     spec_diff = SpectrogramDifferenceProcessor(diff_ratio=0.5, positive_diffs=True, stack_diffs=np.hstack)
 
@@ -52,4 +60,6 @@ class BeatNetFilterBank:
     self.processor = SequentialProcessor((sig, seq, np.hstack))
 
   def process(self, input):
-    return self.processor(input).T
+    output = self.processor(input)
+    # print(f'Processor | output: {output}')
+    return output.T
