@@ -3,7 +3,7 @@ import numpy as np
 from madmom.audio.signal import SignalProcessor, FramedSignalProcessor
 from madmom.audio.spectrogram import FilteredSpectrogramProcessor, LogarithmicSpectrogramProcessor, SpectrogramDifferenceProcessor
 from madmom.audio.stft import ShortTimeFourierTransformProcessor
-from madmom.processors import SequentialProcessor
+from madmom.processors import ParallelProcessor, SequentialProcessor
 
 
 FILTER_FREQ_MIN = 20
@@ -57,9 +57,12 @@ class BeatNetFilterBank:
     spec_diff = SpectrogramDifferenceProcessor(diff_ratio=0.5, positive_diffs=True, stack_diffs=np.hstack)
 
     seq = SequentialProcessor([frame, stft, filt_spec, log_spec, spec_diff])
-    self.processor = SequentialProcessor((sig, seq, np.hstack))
+    pll = ParallelProcessor([])
+    pll.append(seq)
+    self.processor = SequentialProcessor((sig, pll, np.hstack))
 
-  def process(self, input):
-    output = self.processor(input)
-    # print(f'Processor | output: {output}')
+  def process(self, data):
+    # print(f'Filter | input: {data.shape}')
+    output = self.processor(data)
+    # print(f'Filter | output: {output.shape}')
     return output.T

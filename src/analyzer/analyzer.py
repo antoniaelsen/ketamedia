@@ -1,15 +1,15 @@
+import datetime
 import math
 import numpy as np
+import torch
 from matplotlib import pyplot as plt
 
-from .sampler import SAMPLE_RATE, Sampler
+from .models.bda_crnn.model import BdaCrnn
+from .sampler import Sampler
 from .filters.beatnet_filter_bank import BeatNetFilterBank
-# from .models.bda import BDA
 
 
 PLOT = True
-
-
 if (PLOT):
   plt.ion()
   plt.figure()
@@ -19,9 +19,11 @@ def plot(data):
   plt.clf()
   plt.subplot(211)
   plt.plot(data[0], 'r-')
+  plt.ylim(-0.25, 0.25)
   plt.subplot(212)
   plt.plot(data[1], 'r-')
   plt.draw()
+  plt.ylim(0, 1)
   plt.pause(0.0001)
 
 
@@ -36,10 +38,6 @@ class Processor:
       - The first stage produces responses from a multi-process filter bank.
       - The second stage infers beat, downbeat andn non-beat activations with a CRNN.
       - The third stage infers beat and downbeat positions, as well as meter, with a MC particle filter.
-
-
-      Notes:
-       - Hann window hop sizes: https://ccrma.stanford.edu/~jos/parshl/Choice_Hop_Size.html
     '''
     self.sample_rate = sample_rate
     self.window_length = window_length
@@ -52,25 +50,41 @@ class Processor:
       window_hop_length=self.window_hop_length,
       filter_bank_bands=self.filter_bank_bands
     )
-    self.model = None
+    self.model = BdaCrnn(
+      input_size=272,
+      layers_size=2,
+      cells_size=150,
+      hidden_size=150
+    )
 
-
-  def process(self, input):
+  def process(self, data):
     # Apply BeatNet filter bank
-    print(f'Input: {len(input)}')
-    filtered = self.filter.process(input)
-    print(f'Filtered: {len(filtered)}')
-
+    # print(f'Processor | Filter input: {data.shape}')
+    features = self.filter.process(data).T[-1]
     if (PLOT):
-      plot([input, filtered])
+      plot([data, features])
+    # print(f'Processor | Filter output transpose -1: {features.shape}')
+
+    features = torch.from_numpy(features)
+    features = features.unsqueeze(0).unsqueeze(0)
+    # print(f'Processor | Unsqueezed: {features.shape}')
+
     # CRNN
+    prediction = self.model(features)[0]
+    prediction = np.transpose(prediction.detach().numpy()[:2, :])
+
     # Monte-Carlo particle filtering
-    pass
+    detections = self.estimator.process(prediction)
+    return features
 
 
 class Analyzer:
+  '''
+    Notes:
+      - Hann window hop sizes: https://ccrma.stanford.edu/~jos/parshl/Choice_Hop_Size.html
+  '''
   def __init__(self):
-    self.sample_rate = SAMPLE_RATE
+    self.sample_rate = 44100
     self.window_length_ms = 100
     self.window_hop_length_ms = self.window_length_ms / 4 # Hann window hop -- recommended 25% of window for 75% overlap
 
@@ -82,7 +96,7 @@ class Analyzer:
 
     print(f'Analyzer | sample_rate:             {self.sample_rate}')
     print(f'Analyzer | window_length:           {self.window_length}')
-    print(f'Analyzer | window_hop_length:    {self.window_hop_length}')
+    print(f'Analyzer | window_hop_length:       {self.window_hop_length}')
     print(f'Analyzer | stream_window_length:    {stream_window_length}')
 
     self.sampler = Sampler(sample_rate=self.sample_rate, buffer_size=self.window_hop_length)
@@ -93,31 +107,30 @@ class Analyzer:
     )
 
     self.data = np.array([], dtype=np.float32)
-
+    self.feats = np.array([], dtype=np.float32)
 
   def run(self):
-    print(f'Analyzer | Run')
-
     # Debug
     target_length_ms = 10000
-    iterations = math.ceil(target_length_ms / self.window_length_ms)
-
-    self.i = 0
+    iterations = math.ceil(target_length_ms / self.window_hop_length_ms)
 
     def cb(data):
       self.data = np.append(self.data, data)
       self.stream_window = np.append(self.stream_window[self.window_hop_length:], data)
-      self.processor.process(self.stream_window)
+      feats = self.processor.process(self.stream_window)
+      self.feats = np.append(self.feats, feats);
 
-
+    self.i = 0
     self.running = True
+    print(f'Analyzer | Run - start {datetime.datetime.now()} - time {target_length_ms / 1000} ms, iterations {iterations}')
     while self.running:
       self.sampler.capture_stream(self.window_hop_length, cb)
       self.i += 1
 
       if (self.i >= iterations):
         self.stop()
-        print(f'Analyzer | Data for {target_length_ms} ms: {len(self.data)}')
+
+    print(f'Analyzer | Run - end {datetime.datetime.now()}')
 
   def stop(self):
     print(f'Analyzer | Stop')

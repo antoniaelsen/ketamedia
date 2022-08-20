@@ -1,11 +1,9 @@
+import math
 import numpy as np
 import pyaudio
 from typing import Callable
 
 Callback = Callable[[np.float32], None]
-
-SAMPLE_RATE = 44100
-SAMPLE_FRAME_COUNT = 1024
 
 class Sampler:
   def __init__(self, sample_rate, buffer_size):
