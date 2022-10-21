@@ -4,10 +4,10 @@ let T_DIVIS = T_SIDE / 5 ;
 let ROWS = 10;
 let COLS = ROWS * 2;
 
-const RENDER_COLOR = true
+const RENDER_COLOR = false
 const RENDER_ROTATE = false
-const RENDER_OUTLINE = false
-const COLORS = [{ h: 35, s: 30, l: 50 }, { h: 10, s: 80, l: 25 }];
+const RENDER_OUTLINE = true
+const COLORS = [{ h: 35, s: 30, l: 50, a: 0.5 }, { h: 10, s: 80, l: 25, a: 0.5 }];
 const COLOR_STROKE = "#222";
 
 let grid = [];
@@ -76,7 +76,7 @@ const genGrid = (rows, cols) => {
   return grid;
 }
 
-const toColorString = ({ h, s, l }) => `hsl(${h}, ${s}%, ${l}%)`;
+const toColorString = ({ h, s, l, a }) => `hsla(${h}, ${s}%, ${l}%, ${a !== undefined ? a : 1})`;
 
 function setup() {
   // noLoop();
@@ -145,11 +145,13 @@ function drawTile(x, y, side, rot, pattern) {
   const colors = COLORS.map(toColorString);
   fill(colors[0]);
   if (RENDER_OUTLINE) {
-    stroke('rgba(0%,0%,0%,0.5)');
+    stroke('hsla(0,0%,0%,0.5)');
   } else {
     noStroke();
   }
   triangle(pts[0].x, pts[0].y, pts[1].x, pts[1].y, pts[2].x, pts[2].y);
+  stroke('hsla(0,100%,50%,1)');
+  circle(x, y, 10);
 
   ARC_PATTERNS[pattern](pts, colors);
 
