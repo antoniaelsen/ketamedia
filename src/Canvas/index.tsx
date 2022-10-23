@@ -3,9 +3,7 @@ import { OrbitControls, OrthographicCamera } from '@react-three/drei'
 import { Canvas as RtfCanvas } from '@react-three/fiber'
 import * as THREE from "three";
 
-import { Arc } from '../Shapes/Arc';
-import { Box } from '../Shapes/Box';
-import { TriangleTiling } from '../Tiling/triangle';
+import { TriangleTiling } from '../Tiling/Triangle';
 
 const Canvas = () => {
   return (
@@ -14,9 +12,7 @@ const Canvas = () => {
       <OrbitControls/>
       <ambientLight />
       <pointLight position={[10, 10, 10]} />
-      {/* <Box position={[-1.2, 0, -2]} />
-      <Box position={[1.2, 0, -2]} /> */}
-      <TriangleTiling cols={25} rows={25} position={[0, 0, -4]}/>
+      <TriangleTiling cols={25} rows={25} position={[0, 0, -4]} wireframe={false}/>
     </RtfCanvas>
   );
 }

@@ -2,8 +2,8 @@ import React, { useMemo } from 'react'
 import * as THREE from "three";
 
 
-const ARC_THETA_SEGMENTS = 64;
-const ARC_PHI_SEGMENTS = 6;
+const ARC_THETA_SEGMENTS = 32;
+const ARC_PHI_SEGMENTS = 3;
 
 interface ArcProps {
   color: THREE.Color | string,
@@ -21,7 +21,7 @@ export const Arc = (props: ArcProps) => {
     color,
     length = Math.PI * 2,
     position = [0, 0, 0],
-    radius = 0.25,
+    radius = 0.1,
     segmentsTheta = ARC_THETA_SEGMENTS,
     segmentsPhi = ARC_PHI_SEGMENTS,
     start = 0,
