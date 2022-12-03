@@ -45,7 +45,6 @@ export const Triangle = (props: TriangleProps) => {
             <shapeGeometry args={[shape]} />
             <meshBasicMaterial
               attach="material"
-              opacity={0.5}
               color={color}
               wireframe={false}
               side={THREE.DoubleSide}
