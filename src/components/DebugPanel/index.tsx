@@ -45,6 +45,7 @@ export const DebugPanel = (props: DebugPanelProps) => {
         return (
           <Box
             key={key}
+            component="div"
             sx={{
               display: "grid",
               alignItems: "center",

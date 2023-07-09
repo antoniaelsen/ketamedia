@@ -15,7 +15,7 @@ export const Scene = ({
       camera={{ position: cameraPosition, far: 3000, fov: cameraFov }}
     >
       <OrbitControls makeDefault />
-      <color attach="background" args={[`rgb(15, 20, 50)`]} />
+      <color attach="background" args={[`rgb(15, 20, 50)`] as any} />
 
       <ambientLight intensity={0.8} />
 

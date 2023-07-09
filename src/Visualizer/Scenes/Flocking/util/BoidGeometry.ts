@@ -20,9 +20,9 @@ export class BoidGeometry extends THREE.BufferGeometry {
 
     let v = 0;
 
-    function verts_push() {
-      for (let i = 0; i < arguments.length; i++) {
-        vertices.array[v++] = arguments[i];
+    function verts_push(...args: any) {
+      for (let i = 0; i < args.length; i++) {
+        (vertices.array as any)[v++] = args[i];
       }
     }
 
@@ -43,10 +43,9 @@ export class BoidGeometry extends THREE.BufferGeometry {
       const x = (iBoid % textureWidth) / textureWidth;
       const y = ~~(iBoid / textureWidth) / textureWidth;
 
-      references.array[v * 2] = x;
-      references.array[v * 2 + 1] = y;
-
-      boidGeometry.array[v] = v % 9;
+      (references.array as any)[v * 2] = x;
+      (references.array as any)[v * 2 + 1] = y;
+      (boidGeometry.array as any)[v] = v % 9;
     }
 
     this.scale(0.2, 0.2, 0.2);

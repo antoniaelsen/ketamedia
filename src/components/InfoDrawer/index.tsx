@@ -18,7 +18,7 @@ export const InfoDrawer = ({ children }: { children?: React.ReactNode }) => {
         },
       })}
     >
-      <Box p={2} sx={{ backdropFilter: "blur(5px)" }}>
+      <Box component="div" p={2} sx={{ backdropFilter: "blur(5px)" }}>
         {children}
 
         {panel === "setup" && <SetupPanel />}

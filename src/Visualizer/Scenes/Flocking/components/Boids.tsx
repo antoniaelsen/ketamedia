@@ -19,7 +19,7 @@ declare module "@react-three/fiber" {
 const WIDTH = 64;
 
 export const Boids = () => {
-  const ref = useRef<THREE.Mesh>();
+  const ref = useRef<any>();
   const n_boids = useFlockingStore((state: any) => state.n_boids);
 
   const {
@@ -68,7 +68,7 @@ export const Boids = () => {
     if (delta > 1) delta = 1;
     if (!ref.current) return;
 
-    const material = ref.current.material;
+    const material = ref.current.material as THREE.ShaderMaterial;
     const dispersion = new THREE.Vector3(pointer.x, pointer.y, 0);
 
     P["time"].value = now;
@@ -93,9 +93,9 @@ export const Boids = () => {
 
     gpu.compute();
 
-    uniforms["texturePosition"].value =
+    (uniforms["texturePosition"].value as any) =
       gpu.getCurrentRenderTarget(positionVariable).texture;
-    uniforms["textureVelocity"].value =
+    (uniforms["textureVelocity"].value as any) =
       gpu.getCurrentRenderTarget(velocityVariable).texture;
   });
 

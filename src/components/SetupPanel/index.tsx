@@ -55,7 +55,7 @@ export const SetupPanel = (props: BoxProps) => {
   const setDevice = useAudioStore((state: any) => state.setDevice);
 
   return (
-    <Box {...props}>
+    <Box {...props} component="div">
       <Typography variant="h5" component="div">
         Choose a device
       </Typography>

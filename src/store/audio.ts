@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-interface AudioState {
+export interface AudioState {
   device: MediaDeviceInfo | null;
   setDevice: (device: MediaDeviceInfo) => void;
 }

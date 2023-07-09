@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { CONFIG } from "../config";
 
-interface FlockingState {
+export interface FlockingState {
   alignment: number;
   alignment_radius: number;
   cohesion: number;

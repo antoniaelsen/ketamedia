@@ -25,12 +25,12 @@ const BarSlider = styled(Slider)({
   },
 });
 
-const Input = styled(InputBase)(({ theme }) => ({
+const Input = styled(InputBase)({
   "& .MuiInputBase-input": {
     fontSize: "0.75rem",
     padding: "2px",
   },
-}));
+});
 
 interface InputSliderProps extends SliderProps {
   value: number;
@@ -54,6 +54,7 @@ export const InputSlider = (props: InputSliderProps) => {
 
   return (
     <Box
+      component="div"
       sx={{
         display: "grid",
         alignItems: "center",
