@@ -1,0 +1,65 @@
+export const CONFIG = {
+  n_boids: {
+    label: "# boids",
+    initial: 1000,
+    min: 1,
+    max: 10000,
+  },
+  alignment_radius: {
+    label: "alignment radius",
+    initial: 20,
+    min: 0.0,
+    max: 100,
+    step: 0.001,
+  },
+  cohesion_radius: {
+    label: "cohesion radius",
+    initial: 20,
+    min: 0,
+    max: 100,
+    step: 0.5,
+  },
+  dispersion_radius: {
+    label: "dispersion radius",
+    initial: 100,
+    min: 0,
+    max: 250,
+    step: 5,
+  },
+  gravity: {
+    label: "gravity",
+    initial: 6.0,
+    min: 0.0,
+    max: 10,
+    step: 0.5,
+  },
+  gravity_radius: {
+    label: "gravity radius",
+    initial: 250,
+    min: 0,
+    max: 1000,
+    step: 5,
+  },
+  separation_radius: {
+    label: "separation radius",
+    initial: 20,
+    min: 0,
+    max: 100,
+    step: 0.5,
+  },
+  max_velocity: {
+    label: "max velocity",
+    initial: 9.0,
+    min: 1,
+    max: 20,
+    step: 0.5,
+  },
+  dispersion_enabled: {
+    label: "dispersion",
+    initial: false,
+  },
+  fps_camera: {
+    label: "fps camera",
+    initial: false,
+  },
+};
