@@ -4,7 +4,11 @@ import { theme } from "./theme";
 import { AppBar } from "./components/AppBar";
 import { InfoPanel } from "./components/InfoPanel";
 
+import greet from "ketamedia";
+
 function App() {
+  console.log("Aaa");
+  greet();
   return (
     <>
       <ThemeProvider theme={theme}>

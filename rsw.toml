@@ -1,0 +1,5 @@
+cli = "pnpm"
+
+[[crates]]
+name = "ketamedia"
+link = true

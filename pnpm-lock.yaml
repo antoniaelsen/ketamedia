@@ -94,6 +94,9 @@ devDependencies:
   vite-plugin-glsl:
     specifier: ^1.1.2
     version: 1.1.2(vite@4.3.9)
+  vite-plugin-rsw:
+    specifier: ^2.0.11
+    version: 2.0.11(vite@4.3.9)
 
 packages:
 
@@ -2875,6 +2878,14 @@ packages:
       vite: 4.3.9
     transitivePeerDependencies:
       - rollup
+    dev: true
+
+  /vite-plugin-rsw@2.0.11(vite@4.3.9):
+    resolution: {integrity: sha512-OqbGAtdDfK88gDoxA9wVdGowCmlzLSXEyRvD8CgTu9IP5O7tx8Tg2CtIzKOyOWZtHHZPhtdYiN+5Il6rTZCkzw==}
+    peerDependencies:
+      vite: '>2.8.0-0'
+    dependencies:
+      vite: 4.3.9
     dev: true
 
   /vite@4.3.9:
