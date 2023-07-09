@@ -1,4 +1,8 @@
+name = "ketamedia"
+version = "0.1.0"
+
 cli = "pnpm"
+interval = 50
 
 [[crates]]
 name = "ketamedia"

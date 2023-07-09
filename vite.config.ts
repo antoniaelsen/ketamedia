@@ -10,5 +10,5 @@ export default defineConfig({
   optimizeDeps: {
     include: ["@mui/icons-material"],
   },
-  plugins: [glsl(), react(), rsw()],
+  plugins: [glsl(), rsw(), react()],
 });
