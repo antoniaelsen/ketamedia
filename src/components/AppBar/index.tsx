@@ -60,7 +60,6 @@ export const AppBar = (props: AppBarProps) => {
         <IconButton
           aria-label="tune"
           color={panel === "visualizer" ? "secondary" : "inherit"}
-          disabled={!device}
           sx={{ mr: 2 }}
           onClick={() => togglePanel("visualizer")}
         >

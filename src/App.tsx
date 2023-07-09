@@ -2,17 +2,17 @@ import { Visualizer } from "./Visualizer";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { theme } from "./theme";
 import { AppBar } from "./components/AppBar";
-import { InfoDrawer } from "./components/InfoDrawer";
+import { InfoPanel } from "./components/InfoPanel";
 
 function App() {
   return (
     <>
-      <CssBaseline />
       <ThemeProvider theme={theme}>
+        <CssBaseline />
         <AppBar />
         <Visualizer />
 
-        <InfoDrawer />
+        <InfoPanel />
       </ThemeProvider>
     </>
   );

@@ -56,9 +56,7 @@ export const SetupPanel = (props: BoxProps) => {
 
   return (
     <Box {...props} component="div">
-      <Typography variant="h5" component="div">
-        Choose a device
-      </Typography>
+      <Typography variant="h5">Choose a device</Typography>
 
       <FormControl>
         <FormLabel>Device</FormLabel>
