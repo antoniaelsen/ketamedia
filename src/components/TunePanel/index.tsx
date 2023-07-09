@@ -6,7 +6,6 @@ export const TunePanel = () => {
   const visualizer = useAppStore((state: any) => state.visualizer);
 
   const Component = VISUALIZERS[visualizer]?.debug || null;
-  console.log("TunePanel | Component: ", visualizer, Component);
   return (
     <Box
       component="div"
