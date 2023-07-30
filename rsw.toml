@@ -7,3 +7,4 @@ interval = 50
 [[crates]]
 name = "ketamedia"
 link = true
+target = "web"

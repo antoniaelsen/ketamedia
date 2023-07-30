@@ -3,10 +3,11 @@ import { CssBaseline, ThemeProvider } from "@mui/material";
 import { theme } from "./theme";
 import { AppBar } from "./components/AppBar";
 import { InfoPanel } from "./components/InfoPanel";
-
-import init from "ketamedia";
+import { setup } from "./audio/setup";
 
 function App() {
+  setup();
+
   return (
     <>
       <ThemeProvider theme={theme}>

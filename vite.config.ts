@@ -1,7 +1,8 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import glsl from "vite-plugin-glsl";
-import { ViteRsw as rsw } from "vite-plugin-rsw";
+import wasm from "vite-plugin-wasm";
+import topLevelAwait from "vite-plugin-top-level-await";
 
 export default defineConfig({
   build: {
@@ -9,6 +10,7 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: ["@mui/icons-material"],
+    exclude: ["ketamedia"],
   },
-  plugins: [glsl(), rsw(), react()],
+  plugins: [glsl(), react(), topLevelAwait(), wasm()],
 });
