@@ -1,5 +1,5 @@
 import { useAudioStore } from "../store/audio";
-import BeatDetectionNode from "./node";
+import BeatDetectionNode from "../audio/node";
 import workletURL from "./worklet.ts?url";
 
 export const setup = async (device: MediaDeviceInfo) => {
@@ -13,22 +13,24 @@ export const setup = async (device: MediaDeviceInfo) => {
 
   const source = ctx.createMediaStreamSource(stream);
 
-  // Beat Detection Node
-  await ctx.audioWorklet.addModule(workletURL);
-  const beat = new BeatDetectionNode(ctx, "BeatDetection");
+  // // Beat Detection Node
+  // await ctx.audioWorklet.addModule(workletURL);
+  // const beat = new BeatDetectionNode(ctx, "BeatDetection");
 
   // Analyzer
   const analyser = ctx.createAnalyser();
-  analyser.fftSize = 2048;
+  analyser.fftSize = Math.pow(2, 10);
+  analyser.minDecibels = -100;
+  analyser.maxDecibels = -10;
 
   // Graph
   source.connect(analyser);
-  source.connect(beat);
+  // source.connect(beat);
 
   return {
     nodes: {
       analyser,
-      beat,
+      // beat,
     },
   };
 };

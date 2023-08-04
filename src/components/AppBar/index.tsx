@@ -14,13 +14,18 @@ import { useAppStore } from "../../store/app";
 import { useAudioStore } from "../../store/audio";
 
 export const AppBar = (props: AppBarProps) => {
-  const { panel, togglePanel } = useAppStore(
-    (state: any) => ({
-      panel: state.panel,
-      togglePanel: state.togglePanel,
+  const { panels, togglePanel } = useAppStore(
+    (s: any) => ({
+      panels: s.panels,
+      togglePanel: s.togglePanel,
     }),
     shallow
   );
+  const {
+    data: dataPanel,
+    device: devicePanel,
+    visualizer: visualizerPanel,
+  } = panels;
 
   const device = useAudioStore((state: any) => state.device);
 
@@ -39,27 +44,27 @@ export const AppBar = (props: AppBarProps) => {
     >
       <Toolbar>
         <IconButton
-          aria-label="setup"
-          color={panel === "setup" ? "secondary" : "inherit"}
+          aria-label="device"
+          color={devicePanel ? "secondary" : "inherit"}
           sx={{ mr: 2 }}
-          onClick={() => togglePanel("setup")}
+          onClick={() => togglePanel("device")}
         >
           <MicIcon />
         </IconButton>
 
         <IconButton
           aria-label="source data"
-          color={panel === "signal" ? "secondary" : "inherit"}
+          color={dataPanel ? "secondary" : "inherit"}
           disabled={!device}
           sx={{ mr: 2 }}
-          onClick={() => togglePanel("signal")}
+          onClick={() => togglePanel("data")}
         >
           <ShowChartIcon />
         </IconButton>
 
         <IconButton
           aria-label="tune"
-          color={panel === "visualizer" ? "secondary" : "inherit"}
+          color={visualizerPanel ? "secondary" : "inherit"}
           sx={{ mr: 2 }}
           onClick={() => togglePanel("visualizer")}
         >

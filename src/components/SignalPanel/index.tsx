@@ -1,14 +1,10 @@
-import { Box } from "@mui/material";
+import { Graph } from "./Graph";
+import { DragPanel } from "../DragPanel";
 
 export const SignalPanel = () => {
   return (
-    <Box
-      component="div"
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        height: 360,
-      }}
-    ></Box>
+    <DragPanel name="Signal" sx={{ minWidth: "480px" }}>
+      <Graph />
+    </DragPanel>
   );
 };

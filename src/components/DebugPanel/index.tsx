@@ -1,4 +1,4 @@
-import { Box, CardProps, Card, FormLabel, Switch } from "@mui/material";
+import { Box, BoxProps, FormLabel, Switch } from "@mui/material";
 import { InputSlider } from "../InputSlider";
 
 const ValueControl = (props: any) => {
@@ -22,7 +22,7 @@ const ValueControl = (props: any) => {
     />
   );
 };
-export interface DebugPanelProps extends CardProps {
+export interface DebugPanelProps extends BoxProps {
   config: {
     [key: string]: { label: string; min?: number; max?: number; step?: number };
   };
@@ -34,7 +34,7 @@ export const DebugPanel = (props: DebugPanelProps) => {
   const { config, state, setVariable, ...rest } = props;
 
   return (
-    <Card sx={{ background: "transparent" }} {...rest}>
+    <Box {...rest} component="div">
       {Object.entries(config).map(([key, config]) => {
         const { label } = config;
         const value = state[key];
@@ -64,6 +64,6 @@ export const DebugPanel = (props: DebugPanelProps) => {
           </Box>
         );
       })}
-    </Card>
+    </Box>
   );
 };

@@ -2,28 +2,28 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 interface AppState {
-  panel: string | null;
+  panels: Record<string, boolean>;
   visualizer: string | null;
 
-  togglePanel: (panel: string | null) => void;
+  togglePanel: (panels: string) => void;
 }
 
 export const useAppStore = create(
   persist(
     (set): AppState => ({
-      panel: null,
+      panels: {},
       visualizer: "flocking",
 
-      togglePanel: (panel: string | null) => {
+      togglePanel: (panel: string) => {
         set((state: AppState) => {
-          if (state.panel === panel) {
-            return {
-              panel: null,
-            };
-          }
+          const toggled = !!state.panels[panel];
 
           return {
-            panel,
+            ...state,
+            panels: {
+              ...state.panels,
+              [panel]: !toggled,
+            },
           };
         });
       },

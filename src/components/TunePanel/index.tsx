@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { DragPanel } from "../DragPanel";
 import { useAppStore } from "../../store/app";
 import { VISUALIZERS } from "../../Visualizer/visualizers";
 
@@ -7,15 +7,8 @@ export const TunePanel = () => {
 
   const Component = VISUALIZERS[visualizer]?.debug || null;
   return (
-    <Box
-      component="div"
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        height: 360,
-      }}
-    >
+    <DragPanel name="Visualizer">
       <Component />
-    </Box>
+    </DragPanel>
   );
 };

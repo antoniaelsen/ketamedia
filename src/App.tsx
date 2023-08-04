@@ -1,9 +1,9 @@
 import { Visualizer } from "./Visualizer";
 import { CssBaseline, ThemeProvider } from "@mui/material";
-import { theme } from "./theme";
 import { AppBar } from "./components/AppBar";
 import { InfoPanel } from "./components/InfoPanel";
-import { useAudioGraph } from "./audio/setup";
+import { useAudioGraph } from "./hooks/useAudioGraph";
+import { theme } from "./theme";
 
 function App() {
   useAudioGraph();
