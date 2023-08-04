@@ -2,24 +2,16 @@ import { Box } from "@mui/material";
 import { useAppStore } from "../../store/app";
 import { DevicePanel } from "../DevicePanel";
 import { SignalPanel } from "../SignalPanel";
-import { TunePanel } from "../TunePanel";
+import { VisualizerPanel } from "../VisualizerPanel";
 
 export const InfoPanel = ({ children }: { children?: React.ReactNode }) => {
   const panels = useAppStore((state: any) => state.panels);
   const { data, device, visualizer } = panels;
 
-  const activePanels = Object.entries(panels)
-    .filter(([_, active]) => active)
-    .map(([panel, _]) => panel);
-
   return (
     <Box
       component="div"
       p={2}
-      maxWidth={{
-        xs: "100%",
-        sm: "20rem",
-      }}
       sx={{
         backdropFilter: "blur(5px)",
         position: "absolute",
@@ -31,7 +23,7 @@ export const InfoPanel = ({ children }: { children?: React.ReactNode }) => {
 
       {device && <DevicePanel />}
 
-      {visualizer && <TunePanel />}
+      {visualizer && <VisualizerPanel />}
 
       {data && <SignalPanel />}
     </Box>

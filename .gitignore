@@ -10,3 +10,5 @@ pkg/
 Cargo.lock
 wasm-pack.log
 **/*.rs.bk
+
+**/*.mov

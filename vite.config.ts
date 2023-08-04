@@ -8,6 +8,7 @@ export default defineConfig({
   build: {
     minify: false,
   },
+  assetsInclude: ["**/*.mov"],
   optimizeDeps: {
     include: ["@mui/icons-material"],
     exclude: ["ketamedia"],

@@ -12,7 +12,7 @@ export const useAppStore = create(
   persist(
     (set): AppState => ({
       panels: {},
-      visualizer: "flocking",
+      visualizer: "video",
 
       togglePanel: (panel: string) => {
         set((state: AppState) => {
