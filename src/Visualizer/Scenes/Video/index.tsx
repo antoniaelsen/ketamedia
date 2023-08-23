@@ -1,7 +1,8 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, OrthographicCamera, Plane } from "@react-three/drei";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { getConnectedEdges, Node } from "reactflow";
 import * as THREE from "three";
 import useVideoStore from "./store";
 
