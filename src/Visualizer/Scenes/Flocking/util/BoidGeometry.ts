@@ -49,5 +49,6 @@ export class BoidGeometry extends THREE.BufferGeometry {
     }
 
     this.scale(0.2, 0.2, 0.2);
+    this.rotateY(-Math.PI / 2);
   }
 }

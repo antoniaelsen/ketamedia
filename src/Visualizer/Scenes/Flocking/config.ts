@@ -1,9 +1,9 @@
 export const CONFIG = {
   n_boids: {
     label: "# boids",
-    initial: 1000,
+    initial: 5000,
     min: 1,
-    max: 10000,
+    max: 50000,
   },
   alignment_radius: {
     label: "alignment radius",
