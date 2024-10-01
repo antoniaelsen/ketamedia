@@ -1,36 +1,49 @@
-export const CONFIG = {
+interface ConfigProp {
+  label: string;
+  initial: number | boolean | string | number[];
+  min?: number | number[];
+  max?: number | number[];
+  step?: number | number[];
+  legend?: string[];
+}
+
+export const CONFIG: Record<string, ConfigProp> = {
   n_boids: {
     label: "# boids",
     initial: 25000,
     min: 1,
     max: 50000,
   },
+  sweep: {
+    label: "sweep parameters",
+    initial: true,
+  },
   alignment_radius: {
     label: "alignment radius",
     initial: 20,
     min: 0.0,
-    max: 100,
+    max: 50,
     step: 0.001,
   },
   cohesion_radius: {
     label: "cohesion radius",
     initial: 20,
     min: 0,
-    max: 100,
+    max: 50,
     step: 0.5,
   },
   dispersion_radius: {
     label: "dispersion radius",
-    initial: 100,
+    initial: 50,
     min: 0,
-    max: 250,
+    max: 50,
     step: 5,
   },
   gravity_position: {
     label: "gravity well position",
     initial: [0, 0, 0],
-    max: [500, 500, 500],
-    min: [-500, -500, -500],
+    max: [250, 250, 250],
+    min: [-250, -250, -250],
     step: [5, 5, 5],
     legend: ["x", "y", "z"],
   },
@@ -52,7 +65,7 @@ export const CONFIG = {
     label: "separation radius",
     initial: 20,
     min: 0,
-    max: 100,
+    max: 50,
     step: 0.5,
   },
   max_velocity: {

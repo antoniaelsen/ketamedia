@@ -6,7 +6,7 @@ import {
   useFrame,
   useThree,
 } from "@react-three/fiber";
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { shallow } from "zustand/shallow";
 
@@ -16,6 +16,7 @@ import SHADER_VERTEX from "../shaders/boid.vert";
 import { useFlockingStore } from "../store";
 import { BoidGeometry } from "../util/BoidGeometry";
 import { useGPUBoidEngine } from "../util/useGPUBoidEngine";
+import { CONFIG } from "../config";
 
 extend({ BoidGeometry });
 declare module "@react-three/fiber" {
@@ -42,10 +43,142 @@ const DebugGravity = (props: GroupProps & { radius: number }) => {
   );
 };
 
+const rate = (min: number, max: number) => {
+  const range = max - min;
+  const x = 10;
+  const y = 100;
+  return ((Math.random() * range) / x + range / y) * (Math.random() * 2 - 1);
+};
+
+const useSweepBoidParameters = () => {
+  const intervalId = useRef<number | null>(null);
+  const sweepRates = useRef<Record<string, number | number[]>>({});
+  const sweep = useFlockingStore((s: any) => s.sweep);
+
+  useEffect(() => {
+    if (!sweep) return;
+
+    const parameters = [
+      "alignment_radius",
+      "cohesion_radius",
+      "dispersion_radius",
+      "gravity_magnitude",
+      "gravity_position",
+      "gravity_radius",
+      "separation_radius",
+      "max_velocity",
+    ];
+
+    const newSweepRates: any = {};
+    parameters.forEach((param) => {
+      if (CONFIG[param]) {
+        const { initial, min, max } = CONFIG[param];
+        if (min !== undefined && max !== undefined) {
+          if (typeof initial === "object" && Array.isArray(initial)) {
+            newSweepRates[param] = (initial as number[]).map((_, i) =>
+              rate((min as number[])[i], (max as number[])[i])
+            );
+            return;
+          }
+          newSweepRates[param] = rate(min as number, max as number);
+        }
+      }
+    });
+    sweepRates.current = newSweepRates;
+    const kUpdateIntervalMs = 50.0;
+    const kUpdateDelta = kUpdateIntervalMs / 1000.0;
+
+    const sweepNumber = (
+      value: number,
+      r: number,
+      min: number,
+      max: number
+    ) => {
+      const newValue = value + r * kUpdateDelta;
+      let newRate = r;
+
+      if (newValue > max || newValue < min) {
+        if (Math.random() < 0.5) {
+          const r = rate(min, max);
+          newRate = r;
+        } else {
+          newRate = -r;
+        }
+      }
+
+      return [newValue, newRate];
+    };
+
+    const sweepArray = (
+      value: number[],
+      r: number[],
+      min: number[],
+      max: number[]
+    ) => {
+      const newRates = r;
+
+      const newValues = value.map((v, i) => {
+        const ir = r[i];
+        const imin = min[i];
+        const imax = max[i];
+        const newValue = v + ir * kUpdateDelta;
+
+        if (newValue > imax || newValue < imin) {
+          if (Math.random() < 0.5) {
+            const ir = rate(imin, imax);
+            newRates[i] = ir;
+          } else {
+            newRates[i] = -r[i];
+          }
+        }
+
+        return newValue;
+      });
+
+      return [newValues, newRates];
+    };
+
+    intervalId.current = setInterval(() => {
+      parameters.forEach((param) => {
+        if (sweepRates.current[param]) {
+          const currentValue = (useFlockingStore.getState() as any)[param];
+          const { min, max } = CONFIG[param];
+          let newValue: number | number[] | undefined;
+
+          if (typeof currentValue === "number") {
+            [newValue, sweepRates.current[param]] = sweepNumber(
+              currentValue,
+              sweepRates.current[param] as number,
+              min as number,
+              max as number
+            );
+          } else if (Array.isArray(currentValue)) {
+            [newValue, sweepRates.current[param]] = sweepArray(
+              currentValue,
+              sweepRates.current[param] as number[],
+              min as number[],
+              max as number[]
+            );
+          }
+
+          useFlockingStore.setState({ [param]: newValue });
+        }
+      });
+    }, 50);
+
+    return () => {
+      if (intervalId.current) {
+        clearInterval(intervalId.current);
+      }
+    };
+  }, [sweep]);
+};
+
 export const Boids = () => {
   const ref = useRef<any>();
   const n_boids = useFlockingStore((state: any) => state.n_boids);
   const [debug] = useLocalStorage("ketamedia_debug", false);
+  useSweepBoidParameters();
 
   const {
     alignment_radius,
