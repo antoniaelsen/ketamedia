@@ -1,16 +1,20 @@
-import { Box, CardProps, Card, FormLabel, Switch } from "@mui/material";
+import {
+  Box,
+  CardProps,
+  Card,
+  FormLabel,
+  Stack,
+  Switch,
+  BoxProps,
+} from "@mui/material";
 import { InputSlider } from "../InputSlider";
 
-const ValueControl = (props: any) => {
-  const { config, type, value, setValue } = props;
+export type DebugValue = number | number[] | boolean;
 
-  if (type === "boolean") {
-    return (
-      <Switch checked={value} onChange={(e) => setValue(e.target.checked)} />
-    );
-  }
+const NumberControl = (props: any) => {
+  const { config, value, setValue } = props;
+  const { max, min, step } = config;
 
-  const { min, max, step } = config;
   return (
     <InputSlider
       size="small"
@@ -22,12 +26,100 @@ const ValueControl = (props: any) => {
     />
   );
 };
+
+const ArrayControl = (props: any) => {
+  const { config, value, setValue } = props;
+  const { legend, max, min, step } = config;
+
+  return (
+    <Stack>
+      {value.map((v: number, i: number) => {
+        return (
+          <ValueField
+            key={legend?.[i] || i}
+            config={{
+              label: legend?.[i],
+              max: max?.[i],
+              min: min?.[i],
+              step: step?.[i],
+            }}
+            value={v}
+            setValue={(v) => {
+              const updated = [...value];
+              updated[i] = v;
+              setValue(updated);
+            }}
+            sx={{
+              gridTemplateColumns: "1fr 5fr",
+            }}
+          />
+        );
+      })}
+    </Stack>
+  );
+};
+
+const ValueControl = (props: any) => {
+  const { config, value, setValue } = props;
+  const type = typeof value;
+
+  if (type === "boolean") {
+    return (
+      <Switch
+        checked={value as boolean}
+        onChange={(e) => setValue(e.target.checked)}
+      />
+    );
+  } else if (type === "number") {
+    return <NumberControl config={config} value={value} setValue={setValue} />;
+  } else if (type === "object" && Array.isArray(value)) {
+    return <ArrayControl config={config} value={value} setValue={setValue} />;
+  } else {
+    return null;
+  }
+};
+
+export interface ValueFieldProps extends BoxProps {
+  config: {
+    label: string;
+    min?: number | number[];
+    max?: number | number[];
+    step?: number | number[];
+  };
+  value: DebugValue;
+  setValue: (value: DebugValue) => void;
+}
+
+const ValueField = (props: ValueFieldProps) => {
+  const { config, value, setValue, sx } = props;
+
+  return (
+    <Box
+      component="div"
+      sx={{
+        display: "grid",
+        alignItems: "center",
+        gridTemplateColumns: "5fr 7fr",
+        ...sx,
+      }}
+    >
+      <FormLabel sx={{ fontSize: "0.75rem" }}>{config.label}</FormLabel>
+      <ValueControl config={config} value={value} setValue={setValue} />
+    </Box>
+  );
+};
+
 export interface DebugPanelProps extends CardProps {
   config: {
-    [key: string]: { label: string; min?: number; max?: number; step?: number };
+    [key: string]: {
+      label: string;
+      min?: number | number[];
+      max?: number | number[];
+      step?: number | number[];
+    };
   };
-  state: { [key: string]: number };
-  setVariable: (key: string, value: number) => void;
+  state: { [key: string]: DebugValue };
+  setVariable: (key: string, value: DebugValue) => void;
 }
 
 export const DebugPanel = (props: DebugPanelProps) => {
@@ -36,32 +128,16 @@ export const DebugPanel = (props: DebugPanelProps) => {
   return (
     <Card sx={{ background: "transparent" }} {...rest}>
       {Object.entries(config).map(([key, config]) => {
-        const { label } = config;
         const value = state[key];
-        const setValue = (value: number) => setVariable(key, value);
-
-        const type = typeof value;
+        const setValue = (value: DebugValue) => setVariable(key, value);
 
         return (
-          <Box
-            key={key}
-            component="div"
-            sx={{
-              display: "grid",
-              alignItems: "center",
-              gridTemplateColumns: "5fr 7fr",
-            }}
-          >
-            <FormLabel key={key} sx={{ fontSize: "0.75rem" }}>
-              {label}
-            </FormLabel>
-            <ValueControl
-              config={config}
-              type={type}
-              value={value}
-              setValue={setValue}
-            />
-          </Box>
+          <ValueField
+            key={config.label}
+            config={config}
+            value={value}
+            setValue={setValue}
+          />
         );
       })}
     </Card>

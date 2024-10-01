@@ -9,5 +9,12 @@ export default defineConfig({
   optimizeDeps: {
     include: ["@mui/icons-material"],
   },
+  resolve: {
+    alias: {
+      components: "/src/components",
+      store: "/src/store",
+      util: "/src/util",
+    },
+  },
   plugins: [glsl(), react()],
 });

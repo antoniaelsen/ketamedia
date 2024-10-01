@@ -4,7 +4,7 @@ import { ChangeEvent } from "react";
 
 const BarSlider = styled(Slider)({
   borderRadius: 0,
-  height: 24,
+  height: 18,
   paddingBottom: 8,
   paddingTop: 8,
 
