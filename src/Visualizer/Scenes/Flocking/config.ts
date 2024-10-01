@@ -1,7 +1,7 @@
 export const CONFIG = {
   n_boids: {
     label: "# boids",
-    initial: 5000,
+    initial: 25000,
     min: 1,
     max: 50000,
   },
@@ -26,8 +26,16 @@ export const CONFIG = {
     max: 250,
     step: 5,
   },
-  gravity: {
-    label: "gravity",
+  gravity_position: {
+    label: "gravity well position",
+    initial: [0, 0, 0],
+    max: [500, 500, 500],
+    min: [-500, -500, -500],
+    step: [5, 5, 5],
+    legend: ["x", "y", "z"],
+  },
+  gravity_magnitude: {
+    label: "gravity magnitude",
     initial: 6.0,
     min: 0.0,
     max: 10,

@@ -7,7 +7,8 @@ uniform bool dispersion_enabled;
 uniform vec3 dispersion_position;
 uniform float dispersion_radius;
 uniform float separation_radius; 
-uniform float gravity;
+uniform float gravity_magnitude;
+uniform vec3 gravity_position;
 uniform float gravity_radius;
 uniform float max_velocity;
 
@@ -66,15 +67,14 @@ vec3 velocity_disperse(vec3 this_position) {
 }
 
 vec3 velocity_gravity(vec3 this_position) {
-  vec3 center = vec3(0.0, 0.0, 0.0);
-  vec3 d = this_position - center;
+  vec3 d = this_position - gravity_position;
   float dist = length(d);
 
   if (dist < gravity_radius) {
     return ZERO;
   }
 
-  return normalize(d) * delta * gravity;
+  return normalize(d) * delta * gravity_magnitude;
 }
 
 vec3 velocity_separation(float percent, vec3 d) {

@@ -95,7 +95,8 @@ export const useGPUBoidEngine = (gl: any, textureWidth: number) => {
 
     V["max_velocity"] = { value: CONFIG.max_velocity.initial };
 
-    V["gravity"] = { value: CONFIG.gravity.initial };
+    V["gravity_magnitude"] = { value: CONFIG.gravity_magnitude.initial };
+    V["gravity_position"] = { value: CONFIG.gravity_position.initial };
     V["gravity_radius"] = { value: CONFIG.gravity_radius.initial };
 
     velocityVariable.material.defines.BOUNDS = BOUNDS.toFixed(2);

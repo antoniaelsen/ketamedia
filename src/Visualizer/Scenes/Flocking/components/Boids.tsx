@@ -1,8 +1,16 @@
-import { Object3DNode, extend, useFrame, useThree } from "@react-three/fiber";
+import { Sphere } from "@react-three/drei";
+import {
+  GroupProps,
+  Object3DNode,
+  extend,
+  useFrame,
+  useThree,
+} from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
 import { shallow } from "zustand/shallow";
 
+import useLocalStorage from "util/hooks/use-local-storage";
 import SHADER_FRAGMENT from "../shaders/boid.frag";
 import SHADER_VERTEX from "../shaders/boid.vert";
 import { useFlockingStore } from "../store";
@@ -18,16 +26,34 @@ declare module "@react-three/fiber" {
 
 const WIDTH = 64;
 
+const DebugGravity = (props: GroupProps & { radius: number }) => {
+  const SCALE_GRAVITY_SPHERE: [number, number, number] = [10, 10, 10];
+  const { position, radius, ...rest } = props;
+
+  return (
+    <group position={position} {...rest}>
+      <Sphere scale={SCALE_GRAVITY_SPHERE}>
+        <meshStandardMaterial color="black" />
+      </Sphere>
+      <Sphere scale={[radius, radius, radius]}>
+        <meshStandardMaterial color="white" opacity={0.1} transparent={true} />
+      </Sphere>
+    </group>
+  );
+};
+
 export const Boids = () => {
   const ref = useRef<any>();
   const n_boids = useFlockingStore((state: any) => state.n_boids);
+  const [debug] = useLocalStorage("ketamedia_debug", false);
 
   const {
     alignment_radius,
     cohesion_radius,
     dispersion_enabled,
     dispersion_radius,
-    gravity,
+    gravity_magnitude,
+    gravity_position,
     gravity_radius,
     separation_radius,
     max_velocity,
@@ -37,7 +63,8 @@ export const Boids = () => {
       cohesion_radius: s.cohesion_radius,
       dispersion_enabled: s.dispersion_enabled,
       dispersion_radius: s.dispersion_radius,
-      gravity: s.gravity,
+      gravity_position: s.gravity_position,
+      gravity_magnitude: s.gravity_magnitude,
       gravity_radius: s.gravity_radius,
       separation_radius: s.separation_radius,
       max_velocity: s.max_velocity,
@@ -83,7 +110,8 @@ export const Boids = () => {
     V["dispersion_position"] = { value: dispersion };
     V["dispersion_radius"] = { value: dispersion_radius };
     V["separation_radius"] = { value: separation_radius };
-    V["gravity"] = { value: gravity };
+    V["gravity_magnitude"] = { value: gravity_magnitude };
+    V["gravity_position"] = { value: gravity_position };
     V["gravity_radius"] = { value: gravity_radius };
 
     V["max_velocity"] = { value: max_velocity };
@@ -101,6 +129,10 @@ export const Boids = () => {
 
   return (
     <mesh ref={ref} matrixAutoUpdate={false} rotation={[0, Math.PI / 2, 0]}>
+      {debug && (
+        <DebugGravity position={gravity_position} radius={gravity_radius} />
+      )}
+
       <boidGeometry args={[n_boids, WIDTH]} />
       <shaderMaterial
         fragmentShader={SHADER_FRAGMENT}
