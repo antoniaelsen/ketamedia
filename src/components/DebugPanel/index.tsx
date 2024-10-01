@@ -126,7 +126,7 @@ export const DebugPanel = (props: DebugPanelProps) => {
   const { config, state, setVariable, ...rest } = props;
 
   return (
-    <Card sx={{ background: "transparent" }} {...rest}>
+    <Card sx={{ background: "transparent", overflowY: "scroll" }} {...rest}>
       {Object.entries(config).map(([key, config]) => {
         const value = state[key];
         const setValue = (value: DebugValue) => setVariable(key, value);
