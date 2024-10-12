@@ -5,7 +5,7 @@ import { SignalPanel } from "../SignalPanel";
 import { TunePanel } from "../TunePanel";
 
 export const InfoPanel = ({ children }: { children?: React.ReactNode }) => {
-  const panel = useAppStore((state: any) => state.panel);
+  const panel = useAppStore((state) => state.panel);
 
   return (
     <Box
@@ -16,7 +16,6 @@ export const InfoPanel = ({ children }: { children?: React.ReactNode }) => {
         sm: "20rem",
       }}
       sx={{
-        backdropFilter: "blur(5px)",
         position: "absolute",
         right: 0,
         top: 0,

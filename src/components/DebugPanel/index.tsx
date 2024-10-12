@@ -94,18 +94,24 @@ const ValueField = (props: ValueFieldProps) => {
   const { config, value, setValue, sx } = props;
 
   return (
-    <Box
-      component="div"
+    <Stack
+      direction="row"
+      spacing={1}
       sx={{
-        display: "grid",
         alignItems: "center",
-        gridTemplateColumns: "5fr 7fr",
         ...sx,
       }}
     >
-      <FormLabel sx={{ fontSize: "0.75rem" }}>{config.label}</FormLabel>
-      <ValueControl config={config} value={value} setValue={setValue} />
-    </Box>
+      <FormLabel sx={{ flex: 2, fontSize: "0.75rem" }}>
+        {config.label}
+      </FormLabel>
+      <ValueControl
+        sx={{ flex: 3 }}
+        config={config}
+        value={value}
+        setValue={setValue}
+      />
+    </Stack>
   );
 };
 
@@ -126,20 +132,32 @@ export const DebugPanel = (props: DebugPanelProps) => {
   const { config, state, setVariable, ...rest } = props;
 
   return (
-    <Card sx={{ background: "transparent", overflowY: "scroll" }} {...rest}>
-      {Object.entries(config).map(([key, config]) => {
-        const value = state[key];
-        const setValue = (value: DebugValue) => setVariable(key, value);
+    <Card
+      sx={{
+        background: "transparent",
+        backdropFilter: "blur(5px)",
+        padding: "0.5rem",
+        overflow: "hidden",
+      }}
+      {...rest}
+    >
+      <Box sx={{ overflowY: "scroll", height: "100%" }}>
+        <Stack>
+          {Object.entries(config).map(([key, config]) => {
+            const value = state[key];
+            const setValue = (value: DebugValue) => setVariable(key, value);
 
-        return (
-          <ValueField
-            key={config.label}
-            config={config}
-            value={value}
-            setValue={setValue}
-          />
-        );
-      })}
+            return (
+              <ValueField
+                key={config.label}
+                config={config}
+                value={value}
+                setValue={setValue}
+              />
+            );
+          })}
+        </Stack>
+      </Box>
     </Card>
   );
 };

@@ -13,7 +13,7 @@ import { shallow } from "zustand/shallow";
 import useLocalStorage from "util/hooks/use-local-storage";
 import SHADER_FRAGMENT from "../shaders/boid.frag";
 import SHADER_VERTEX from "../shaders/boid.vert";
-import { useFlockingStore } from "../store";
+import { FlockingState, useFlockingStore } from "../store";
 import { BoidGeometry } from "../util/BoidGeometry";
 import { useGPUBoidEngine } from "../util/useGPUBoidEngine";
 import { CONFIG } from "../config";
@@ -26,6 +26,10 @@ declare module "@react-three/fiber" {
 }
 
 const WIDTH = 128;
+
+interface BoidUniforms {
+  [uniform: string]: THREE.IUniform<any>;
+}
 
 const DebugGravity = (props: GroupProps & { radius: number }) => {
   const SCALE_GRAVITY_SPHERE: [number, number, number] = [10, 10, 10];
@@ -53,12 +57,12 @@ const rate = (min: number, max: number) => {
 const useSweepBoidParameters = () => {
   const intervalId = useRef<number | null>(null);
   const sweepRates = useRef<Record<string, number | number[]>>({});
-  const sweep = useFlockingStore((s: any) => s.sweep);
+  const sweep = useFlockingStore((s) => s.sweep);
 
   useEffect(() => {
     if (!sweep) return;
 
-    const parameters = [
+    const parameters: (keyof FlockingState)[] = [
       "alignment_radius",
       "cohesion_radius",
       "dispersion_radius",
@@ -69,7 +73,7 @@ const useSweepBoidParameters = () => {
       "max_velocity",
     ];
 
-    const newSweepRates: any = {};
+    const newSweepRates: Record<string, number | number[]> = {};
     parameters.forEach((param) => {
       if (CONFIG[param]) {
         const { initial, min, max } = CONFIG[param];
@@ -141,7 +145,7 @@ const useSweepBoidParameters = () => {
     intervalId.current = setInterval(() => {
       parameters.forEach((param) => {
         if (sweepRates.current[param]) {
-          const currentValue = (useFlockingStore.getState() as any)[param];
+          const currentValue = useFlockingStore.getState()[param];
           const { min, max } = CONFIG[param];
           let newValue: number | number[] | undefined;
 
@@ -175,8 +179,8 @@ const useSweepBoidParameters = () => {
 };
 
 export const Boids = () => {
-  const ref = useRef<any>();
-  const n_boids = useFlockingStore((state: any) => state.n_boids);
+  const ref = useRef<THREE.Mesh>(null);
+  const n_boids = useFlockingStore((state) => state.n_boids);
   const [debug] = useLocalStorage("ketamedia_debug", false);
   useSweepBoidParameters();
 
@@ -213,7 +217,7 @@ export const Boids = () => {
     WIDTH
   );
 
-  const uniforms = useMemo(() => {
+  const uniforms = useMemo((): BoidUniforms => {
     return {
       color: { value: new THREE.Color(0xff2200) },
       texturePosition: { value: null },
@@ -256,9 +260,9 @@ export const Boids = () => {
 
     gpu.compute();
 
-    (uniforms["texturePosition"].value as any) =
+    uniforms["texturePosition"].value =
       gpu.getCurrentRenderTarget(positionVariable).texture;
-    (uniforms["textureVelocity"].value as any) =
+    uniforms["textureVelocity"].value =
       gpu.getCurrentRenderTarget(velocityVariable).texture;
 
     if (!fpv_camera) return;

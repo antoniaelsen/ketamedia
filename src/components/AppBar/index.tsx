@@ -1,9 +1,4 @@
-import {
-  AppBar as MuiAppBar,
-  AppBarProps,
-  IconButton,
-  Toolbar,
-} from "@mui/material";
+import { IconButton, Stack } from "@mui/material";
 
 import MicIcon from "@mui/icons-material/Mic";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
@@ -13,59 +8,58 @@ import { shallow } from "zustand/shallow";
 import { useAppStore } from "../../store/app";
 import { useAudioStore } from "../../store/audio";
 
-export const AppBar = (props: AppBarProps) => {
+export const AppBar = () => {
   const { panel, togglePanel } = useAppStore(
-    (state: any) => ({
+    (state) => ({
       panel: state.panel,
       togglePanel: state.togglePanel,
     }),
     shallow
   );
 
-  const device = useAudioStore((state: any) => state.device);
+  const device = useAudioStore((state) => state.device);
 
   return (
-    <MuiAppBar
+    <Stack
       position="absolute"
+      direction="row"
+      spacing={1}
       sx={{
         background: "transparent",
-        backdropFilter: "blur(5px)",
-        bottom: 0,
         height: "fit-content",
+        padding: 1,
+        bottom: 0,
         top: "auto",
         zIndex: 10000,
       }}
-      {...props}
     >
-      <Toolbar>
-        <IconButton
-          aria-label="setup"
-          color={panel === "setup" ? "secondary" : "inherit"}
-          sx={{ mr: 2 }}
-          onClick={() => togglePanel("setup")}
-        >
-          <MicIcon />
-        </IconButton>
+      <IconButton
+        aria-label="setup"
+        color={panel === "setup" ? "secondary" : "inherit"}
+        sx={{ borderRadius: "4px" }}
+        onClick={() => togglePanel("setup")}
+      >
+        <MicIcon />
+      </IconButton>
 
-        <IconButton
-          aria-label="source data"
-          color={panel === "signal" ? "secondary" : "inherit"}
-          disabled={!device}
-          sx={{ mr: 2 }}
-          onClick={() => togglePanel("signal")}
-        >
-          <ShowChartIcon />
-        </IconButton>
+      <IconButton
+        aria-label="source data"
+        color={panel === "signal" ? "secondary" : "inherit"}
+        disabled={!device}
+        sx={{ borderRadius: "4px" }}
+        onClick={() => togglePanel("signal")}
+      >
+        <ShowChartIcon />
+      </IconButton>
 
-        <IconButton
-          aria-label="tune"
-          color={panel === "visualizer" ? "secondary" : "inherit"}
-          sx={{ mr: 2 }}
-          onClick={() => togglePanel("visualizer")}
-        >
-          <TuneIcon />
-        </IconButton>
-      </Toolbar>
-    </MuiAppBar>
+      <IconButton
+        aria-label="tune"
+        color={panel === "visualizer" ? "secondary" : "inherit"}
+        sx={{ borderRadius: "4px" }}
+        onClick={() => togglePanel("visualizer")}
+      >
+        <TuneIcon />
+      </IconButton>
+    </Stack>
   );
 };

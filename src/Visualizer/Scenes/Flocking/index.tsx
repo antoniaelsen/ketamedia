@@ -20,7 +20,7 @@ export const Scene = ({
       }}
     >
       <OrbitControls makeDefault />
-      <color attach="background" args={[`rgb(15, 20, 50)`] as any} />
+      <color attach="background" args={[`rgb(15, 20, 50)`]} />
 
       <ambientLight intensity={0.8} />
 

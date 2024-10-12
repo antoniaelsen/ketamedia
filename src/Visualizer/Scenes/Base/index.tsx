@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-const Scene = () => {
+export const Scene = () => {
   return (
     <motion.div
       animate={{
@@ -17,9 +17,4 @@ const Scene = () => {
       }}
     />
   );
-};
-
-export default {
-  debug: null,
-  scene: Scene,
 };

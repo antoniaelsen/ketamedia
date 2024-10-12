@@ -51,8 +51,8 @@ const useDevices = () => {
 
 export const SetupPanel = (props: BoxProps) => {
   const devices = useDevices();
-  const device = useAudioStore((state: any) => state.device);
-  const setDevice = useAudioStore((state: any) => state.setDevice);
+  const device = useAudioStore((state) => state.device);
+  const setDevice = useAudioStore((state) => state.setDevice);
 
   return (
     <Box {...props} component="div">

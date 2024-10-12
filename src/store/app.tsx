@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-interface AppState {
+export interface AppState {
   panel: string | null;
   visualizer: string | null;
 
@@ -9,7 +9,7 @@ interface AppState {
 }
 
 export const useAppStore = create(
-  persist(
+  persist<AppState>(
     (set): AppState => ({
       panel: null,
       visualizer: "flocking",

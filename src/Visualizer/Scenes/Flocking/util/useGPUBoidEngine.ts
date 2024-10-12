@@ -39,7 +39,10 @@ function fillVelocityTexture(texture: THREE.DataTexture) {
   }
 }
 
-export const useGPUBoidEngine = (gl: any, textureWidth: number) => {
+export const useGPUBoidEngine = (
+  gl: THREE.WebGLRenderer,
+  textureWidth: number
+) => {
   return useMemo(() => {
     const gpu = new GPUComputationRenderer(textureWidth, textureWidth, gl);
 
@@ -117,5 +120,5 @@ export const useGPUBoidEngine = (gl: any, textureWidth: number) => {
       P,
       V,
     };
-  }, [gl]);
+  }, [gl, textureWidth]);
 };

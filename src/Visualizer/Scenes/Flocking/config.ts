@@ -22,6 +22,13 @@ export const CONFIG: Record<string, ConfigProp> = {
     label: "sweep parameters",
     initial: false,
   },
+  max_velocity: {
+    label: "max velocity",
+    initial: 9.0,
+    min: 1,
+    max: 20,
+    step: 0.5,
+  },
   alignment_radius: {
     label: "alignment radius",
     initial: 20,
@@ -36,12 +43,12 @@ export const CONFIG: Record<string, ConfigProp> = {
     max: 50,
     step: 0.5,
   },
-  dispersion_radius: {
-    label: "dispersion radius",
-    initial: 50,
+  separation_radius: {
+    label: "separation radius",
+    initial: 20,
     min: 0,
     max: 50,
-    step: 5,
+    step: 0.5,
   },
   gravity_position: {
     label: "gravity well position",
@@ -65,22 +72,16 @@ export const CONFIG: Record<string, ConfigProp> = {
     max: 1000,
     step: 5,
   },
-  separation_radius: {
-    label: "separation radius",
-    initial: 20,
-    min: 0,
-    max: 50,
-    step: 0.5,
-  },
-  max_velocity: {
-    label: "max velocity",
-    initial: 9.0,
-    min: 1,
-    max: 20,
-    step: 0.5,
-  },
+
   dispersion_enabled: {
     label: "dispersion",
     initial: false,
+  },
+  dispersion_radius: {
+    label: "dispersion radius",
+    initial: 50,
+    min: 0,
+    max: 50,
+    step: 5,
   },
 };

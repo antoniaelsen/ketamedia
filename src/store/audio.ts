@@ -5,7 +5,7 @@ export interface AudioState {
   setDevice: (device: MediaDeviceInfo) => void;
 }
 
-export const useAudioStore = create((set) => ({
+export const useAudioStore = create<AudioState>((set) => ({
   device: null,
 
   setDevice: (device: MediaDeviceInfo) => set({ device }),

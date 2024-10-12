@@ -1,10 +1,10 @@
-import { Box, InputBase, Slider, SliderProps } from "@mui/material";
+import { InputBase, Slider, SliderProps, Stack } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { ChangeEvent } from "react";
 
 const BarSlider = styled(Slider)({
   borderRadius: 0,
-  height: 18,
+  height: "1.25rem",
   paddingBottom: 8,
   paddingTop: 8,
 
@@ -16,7 +16,7 @@ const BarSlider = styled(Slider)({
     backgroundColor: "#444",
     border: 0,
     borderRadius: 0,
-    height: 24,
+    height: "1.25rem",
     width: 4,
     "&:focus, &:hover, &.Mui-active, &.Mui-focusVisible": {
       boxShadow: "inherit",
@@ -55,27 +55,27 @@ export const InputSlider = (props: InputSliderProps) => {
   };
 
   return (
-    <Box
-      component="div"
+    <Stack
+      spacing={2}
+      direction="row"
       sx={{
-        display: "grid",
         alignItems: "center",
-        gridTemplateColumns: "3fr 1fr",
-        gridGap: "4px",
       }}
     >
       <BarSlider
+        sx={{ flex: 2 }}
         value={typeof value === "number" ? value : 0}
         onChange={handleSliderChange}
         {...rest}
       />
       <Input
+        sx={{ flex: 1, textAlign: "right" }}
         inputMode="numeric"
         margin="none"
         size={rest.size}
         value={value}
         onChange={handleInputChange}
       />
-    </Box>
+    </Stack>
   );
 };

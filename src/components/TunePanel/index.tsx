@@ -3,9 +3,9 @@ import { useAppStore } from "../../store/app";
 import { VISUALIZERS } from "../../Visualizer/visualizers";
 
 export const TunePanel = () => {
-  const visualizer = useAppStore((state: any) => state.visualizer);
+  const visualizer = useAppStore((state) => state.visualizer);
 
-  const Component = VISUALIZERS[visualizer]?.debug || null;
+  const Component = visualizer ? VISUALIZERS[visualizer]?.debug : null;
   return (
     <Box
       component="div"
@@ -15,7 +15,7 @@ export const TunePanel = () => {
         height: 360,
       }}
     >
-      <Component />
+      {Component && <Component />}
     </Box>
   );
 };
