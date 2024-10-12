@@ -12,7 +12,12 @@ export const Scene = ({
   return (
     <Canvas
       shadows
-      camera={{ position: cameraPosition, far: 3000, fov: cameraFov }}
+      camera={{
+        position: cameraPosition,
+        far: 10000,
+        near: 0.0001,
+        fov: cameraFov,
+      }}
     >
       <OrbitControls makeDefault />
       <color attach="background" args={[`rgb(15, 20, 50)`] as any} />

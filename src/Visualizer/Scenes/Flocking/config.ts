@@ -10,13 +10,17 @@ interface ConfigProp {
 export const CONFIG: Record<string, ConfigProp> = {
   n_boids: {
     label: "# boids",
-    initial: 25000,
+    initial: 5000,
     min: 1,
     max: 50000,
   },
+  fpv_camera: {
+    label: "fpv camera",
+    initial: false,
+  },
   sweep: {
     label: "sweep parameters",
-    initial: true,
+    initial: false,
   },
   alignment_radius: {
     label: "alignment radius",
@@ -77,10 +81,6 @@ export const CONFIG: Record<string, ConfigProp> = {
   },
   dispersion_enabled: {
     label: "dispersion",
-    initial: false,
-  },
-  fps_camera: {
-    label: "fps camera",
     initial: false,
   },
 };

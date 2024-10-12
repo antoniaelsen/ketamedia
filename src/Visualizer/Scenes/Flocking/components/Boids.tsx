@@ -25,7 +25,7 @@ declare module "@react-three/fiber" {
   }
 }
 
-const WIDTH = 64;
+const WIDTH = 128;
 
 const DebugGravity = (props: GroupProps & { radius: number }) => {
   const SCALE_GRAVITY_SPHERE: [number, number, number] = [10, 10, 10];
@@ -190,6 +190,7 @@ export const Boids = () => {
     gravity_radius,
     separation_radius,
     max_velocity,
+    fpv_camera,
   } = useFlockingStore(
     (s: any) => ({
       alignment_radius: s.alignment_radius,
@@ -201,6 +202,7 @@ export const Boids = () => {
       gravity_radius: s.gravity_radius,
       separation_radius: s.separation_radius,
       max_velocity: s.max_velocity,
+      fpv_camera: s.fpv_camera,
     }),
     shallow
   );
@@ -258,10 +260,60 @@ export const Boids = () => {
       gpu.getCurrentRenderTarget(positionVariable).texture;
     (uniforms["textureVelocity"].value as any) =
       gpu.getCurrentRenderTarget(velocityVariable).texture;
+
+    if (!fpv_camera) return;
+
+    // Set camera to position and orientation of boid 0
+
+    // Read position of boid 0 (first texel)
+    const positionData = new Float32Array(4);
+    state.gl.readRenderTargetPixels(
+      gpu.getCurrentRenderTarget(positionVariable),
+      0,
+      0,
+      1,
+      1,
+      positionData
+    );
+
+    // Read velocity of boid 0 (first texel)
+    const velocityData = new Float32Array(4);
+    state.gl.readRenderTargetPixels(
+      gpu.getCurrentRenderTarget(velocityVariable),
+      0,
+      0,
+      1,
+      1,
+      velocityData
+    );
+
+    const boidPosition = new THREE.Vector3(
+      positionData[0],
+      positionData[1],
+      positionData[2]
+    );
+    const boidVelocity = new THREE.Vector3(
+      velocityData[0],
+      velocityData[1],
+      velocityData[2]
+    );
+
+    // position camera behind void's posiiton (based on boid velocity)
+    const cameraPosition = boidPosition
+      .clone()
+      .sub(boidVelocity.clone().setLength(100));
+
+    state.camera.position.copy(cameraPosition);
+    state.camera.lookAt(boidPosition.clone());
   });
 
   return (
-    <mesh ref={ref} matrixAutoUpdate={false} rotation={[0, Math.PI / 2, 0]}>
+    <mesh
+      ref={ref}
+      matrixAutoUpdate={false}
+      rotation={[0, Math.PI / 2, 0]}
+      frustumCulled={false}
+    >
       {debug && (
         <DebugGravity position={gravity_position} radius={gravity_radius} />
       )}
