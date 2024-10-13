@@ -1,11 +1,4 @@
-interface ConfigProp {
-  label: string;
-  initial: number | boolean | string | number[];
-  min?: number | number[];
-  max?: number | number[];
-  step?: number | number[];
-  legend?: string[];
-}
+import { ConfigProp } from "types";
 
 export const CONFIG: Record<string, ConfigProp> = {
   n_boids: {

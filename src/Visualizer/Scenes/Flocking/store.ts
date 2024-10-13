@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { CONFIG } from "../config";
+import { CONFIG } from "./config";
 
 export interface FlockingState {
   n_boids: number;
