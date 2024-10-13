@@ -15,7 +15,7 @@ const STARS: StarMetadata[] = (STAR_JSON as StarMetadata[]).filter(
 
 export const Scene = ({
   cameraFov = 75,
-  cameraPosition = new Vector3(0, 0, 350),
+  cameraPosition = new Vector3(0, 0, 1),
 }) => {
   const { show_nametags, scale_nametags } = useGalaxyStore();
 

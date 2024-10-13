@@ -1,11 +1,13 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { VisualizerKey } from "../Visualizer/visualizers";
 
 export interface AppState {
   panel: string | null;
-  visualizer: string | null;
+  visualizer: VisualizerKey | null;
 
   togglePanel: (panel: string | null) => void;
+  toggleVisualizer: (visualizer: VisualizerKey) => void;
 }
 
 export const useAppStore = create(
@@ -13,6 +15,12 @@ export const useAppStore = create(
     (set): AppState => ({
       panel: null,
       visualizer: "flocking",
+
+      toggleVisualizer: (visualizer: VisualizerKey) => {
+        set(() => ({
+          visualizer,
+        }));
+      },
 
       togglePanel: (panel: string | null) => {
         set((state: AppState) => {

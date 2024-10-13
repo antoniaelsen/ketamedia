@@ -13,3 +13,5 @@ export const VISUALIZERS: {
   flocking: { scene: FlockingScene, debug: FlockingDebugPanel },
   galaxy: { scene: GalaxyScene, debug: GalaxyDebugPanel },
 };
+
+export type VisualizerKey = keyof typeof VISUALIZERS;
