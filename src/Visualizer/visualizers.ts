@@ -18,7 +18,7 @@ export const getVisualizer = (
   key: VisualizerKey | null
 ): { scene: React.ElementType; debug?: React.ElementType } => {
   if (!key || !VISUALIZERS[key]) {
-    return { scene: GalaxyScene, debug: GalaxyDebugPanel };
+    return { scene: FlockingScene, debug: FlockingDebugPanel };
   }
 
   return VISUALIZERS[key];
