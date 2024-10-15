@@ -10,8 +10,18 @@ import {
 export const VISUALIZERS: {
   [key: string]: { scene: React.ElementType; debug?: React.ElementType };
 } = {
+  aster: { scene: GalaxyScene, debug: GalaxyDebugPanel },
   flocking: { scene: FlockingScene, debug: FlockingDebugPanel },
-  galaxy: { scene: GalaxyScene, debug: GalaxyDebugPanel },
+};
+
+export const getVisualizer = (
+  key: VisualizerKey | null
+): { scene: React.ElementType; debug?: React.ElementType } => {
+  if (!key || !VISUALIZERS[key]) {
+    return { scene: GalaxyScene, debug: GalaxyDebugPanel };
+  }
+
+  return VISUALIZERS[key];
 };
 
 export type VisualizerKey = keyof typeof VISUALIZERS;

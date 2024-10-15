@@ -1,11 +1,11 @@
 import { Box } from "@mui/material";
 import { useAppStore } from "../../store/app";
-import { VISUALIZERS } from "../../Visualizer/visualizers";
+import { getVisualizer } from "../../Visualizer/visualizers";
 
 export const TunePanel = () => {
   const visualizer = useAppStore((state) => state.visualizer);
 
-  const Component = visualizer ? VISUALIZERS[visualizer]?.debug : null;
+  const { debug: Component } = getVisualizer(visualizer);
   return (
     <Box
       component="div"

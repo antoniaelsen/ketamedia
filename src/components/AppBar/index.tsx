@@ -63,15 +63,20 @@ const VisualizerMenu = (props: {
             horizontal: "left",
           }}
         >
-          {Object.keys(VISUALIZERS).map((v) => (
-            <MenuItem
-              key={v}
-              selected={v === selected}
-              onClick={() => onSelect(v)}
-            >
-              {v}
-            </MenuItem>
-          ))}
+          {Object.keys(VISUALIZERS)
+            .sort()
+            .map((v) => (
+              <MenuItem
+                key={v}
+                selected={v === selected}
+                onClick={() => {
+                  onSelect(v);
+                  handleClose();
+                }}
+              >
+                {v}
+              </MenuItem>
+            ))}
         </Menu>
       </div>
     </ClickAwayListener>

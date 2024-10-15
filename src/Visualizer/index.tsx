@@ -1,12 +1,11 @@
 import { Box, BoxProps } from "@mui/material";
 import { useAppStore } from "../store/app";
-import { Scene as BaseScene } from "./Scenes/Base";
-import { VISUALIZERS } from "./visualizers";
+import { getVisualizer } from "./visualizers";
 
 export const Visualizer = (props: BoxProps) => {
   const visualizer = useAppStore((state) => state.visualizer);
 
-  const Scene = visualizer ? VISUALIZERS[visualizer]?.scene : BaseScene;
+  const { scene: Scene } = getVisualizer(visualizer);
 
   return (
     <Box
