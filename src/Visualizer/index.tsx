@@ -1,4 +1,5 @@
 import { Box, BoxProps } from "@mui/material";
+import { ErrorBoundary, ErrorText } from "components/ErrorBoundary";
 import { useAppStore } from "../store/app";
 import { getVisualizer } from "./visualizers";
 
@@ -14,7 +15,13 @@ export const Visualizer = (props: BoxProps) => {
       {...props}
       component="div"
     >
-      <Scene />
+      <ErrorBoundary
+        fallback={
+          <ErrorText title="oh no" subtitle="does your device support webgl?" />
+        }
+      >
+        <Scene />
+      </ErrorBoundary>
     </Box>
   );
 };
