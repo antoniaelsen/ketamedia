@@ -12,7 +12,11 @@ export const getIsMobile = () => {
       )
     )
       check = true;
-  })(navigator.userAgent || navigator.vendor || (window as any).opera);
+  })(
+    window.navigator.userAgent ||
+      window.navigator.vendor ||
+      (window as any).opera
+  );
   return check;
 };
 

@@ -115,24 +115,27 @@ export const AppBar = () => {
         zIndex: 10000,
       }}
     >
-      <IconButton
-        aria-label="setup"
-        color={panel === "setup" ? "secondary" : "inherit"}
-        sx={{ borderRadius: "4px" }}
-        onClick={() => togglePanel("setup")}
-      >
-        <MicIcon />
-      </IconButton>
-
-      <IconButton
-        aria-label="source data"
-        color={panel === "signal" ? "secondary" : "inherit"}
-        disabled={!device}
-        sx={{ borderRadius: "4px" }}
-        onClick={() => togglePanel("signal")}
-      >
-        <ShowChartIcon />
-      </IconButton>
+      {!!window.navigator.mediaDevices && (
+        <IconButton
+          aria-label="setup"
+          color={panel === "setup" ? "secondary" : "inherit"}
+          sx={{ borderRadius: "4px" }}
+          onClick={() => togglePanel("setup")}
+        >
+          <MicIcon />
+        </IconButton>
+      )}
+      {!!window.navigator.mediaDevices && (
+        <IconButton
+          aria-label="source data"
+          color={panel === "signal" ? "secondary" : "inherit"}
+          disabled={!device}
+          sx={{ borderRadius: "4px" }}
+          onClick={() => togglePanel("signal")}
+        >
+          <ShowChartIcon />
+        </IconButton>
+      )}
 
       <VisualizerMenu selected={visualizer} onSelect={handleVisualizerSelect} />
 

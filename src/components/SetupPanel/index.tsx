@@ -43,7 +43,11 @@ const useDevices = () => {
   };
 
   useEffect(() => {
-    navigator.mediaDevices.enumerateDevices().then(onDevices);
+    if (!window.navigator.mediaDevices) {
+      return;
+    }
+
+    window.navigator.mediaDevices.enumerateDevices().then(onDevices);
   }, []);
 
   return devices;
