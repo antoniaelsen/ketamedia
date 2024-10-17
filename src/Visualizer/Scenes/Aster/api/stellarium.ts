@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { parseStellariumConstellations } from "../util/stellarium";
+import { parseStellariumConstellations } from "../util/lib";
 import { Constellation } from "../types";
 
 const getConstellations = async (): Promise<Record<string, Constellation>> => {

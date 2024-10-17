@@ -17,6 +17,7 @@ import { FlockingState, useFlockingStore } from "../store";
 import { BoidGeometry } from "../util/BoidGeometry";
 import { useGPUBoidEngine } from "../util/useGPUBoidEngine";
 import { CONFIG } from "../config";
+import { getIsMobile } from "util/hooks/use-is-mobile";
 
 extend({ BoidGeometry });
 declare module "@react-three/fiber" {
@@ -24,8 +25,6 @@ declare module "@react-three/fiber" {
     boidGeometry: Object3DNode<BoidGeometry, typeof BoidGeometry>;
   }
 }
-
-const WIDTH = 128;
 
 interface BoidUniforms {
   [uniform: string]: THREE.IUniform<any>;
@@ -211,6 +210,7 @@ export const Boids = () => {
     shallow
   );
 
+  const WIDTH = getIsMobile() ? 64 : 128;
   const { gl } = useThree();
   const { gpu, positionVariable, velocityVariable, P, V } = useGPUBoidEngine(
     gl,

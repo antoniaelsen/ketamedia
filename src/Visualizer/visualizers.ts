@@ -1,5 +1,4 @@
 import React from "react";
-import { getIsMobile } from "util/hooks/use-is-mobile";
 import { DebugPanel as AsterDebugPanel } from "./Scenes/Aster/components/DebugPanel";
 import { DebugPanel as FlockingDebugPanel } from "./Scenes/Flocking/components/DebugPanel";
 const AsterScene = React.lazy(() => import("./Scenes/Aster"));
@@ -30,11 +29,7 @@ export const getVisualizer = (
     return { scene: FlockingScene, debug: FlockingDebugPanel };
   }
 
-  const vis = VISUALIZERS[key];
-  if (vis.desktopOnly && getIsMobile()) {
-    return { scene: FlockingScene, debug: FlockingDebugPanel };
-  }
-  return vis;
+  return VISUALIZERS[key];
 };
 
 export type VisualizerKey = keyof typeof VISUALIZERS;

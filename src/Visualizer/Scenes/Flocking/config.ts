@@ -1,11 +1,14 @@
 import { ConfigProp } from "types";
+import { getIsMobile } from "util/hooks/use-is-mobile";
+
+const isMobile = getIsMobile();
 
 export const CONFIG: Record<string, ConfigProp> = {
   n_boids: {
     label: "# boids",
-    initial: 5000,
+    initial: isMobile ? 100 : 1000,
     min: 1,
-    max: 50000,
+    max: isMobile ? 10000 : 50000,
   },
   fpv_camera: {
     label: "fpv camera",

@@ -94,16 +94,14 @@ export const Asterisms = (props: {
 }) => {
   const { constellations } = props;
 
-  const [opacity, setOpacity] = useState(0.25);
+  let opacity = 0.25;
   useFrame((state) => {
     const { camera } = state;
     const dist = camera.position.distanceTo(new Vector3(0, 0, 0));
 
     const o = Math.max(0.05, 0.33 - (dist / 250) * 0.28);
 
-    if (o !== opacity) {
-      setOpacity(o);
-    }
+    opacity = o;
   });
 
   return (

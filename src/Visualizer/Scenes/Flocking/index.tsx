@@ -1,7 +1,7 @@
-import { Boids as BoidsShader } from "./components/Boids";
-import { Canvas } from "@react-three/fiber";
-import { Vector3 } from "three";
 import { OrbitControls } from "@react-three/drei";
+import { Vector3 } from "three";
+import { Canvas } from "components/Canvas";
+import { Boids as BoidsShader } from "./components/Boids";
 
 export const Scene = ({
   cameraFov = 75,
@@ -9,7 +9,6 @@ export const Scene = ({
 }) => {
   return (
     <Canvas
-      shadows
       camera={{
         position: cameraPosition,
         far: 10000,
