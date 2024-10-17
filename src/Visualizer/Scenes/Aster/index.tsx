@@ -4,7 +4,6 @@ import { useMemo } from "react";
 import { Vector3 } from "three";
 
 import { useConstellations } from "./api/stellarium";
-export { DebugPanel } from "./components/DebugPanel";
 import { Nametags } from "./components/Nametags";
 import { InstancedStarField } from "./components/StarField";
 import { kStars } from "./util/stellarium";
@@ -12,10 +11,7 @@ import { useGalaxyStore } from "./store";
 import { getIsMobile } from "util/hooks/use-is-mobile";
 import { Asterisms } from "./components/Asterisms";
 
-export const Scene = ({
-  cameraFov = 75,
-  cameraPosition = new Vector3(0, 0, 1),
-}) => {
+const Scene = ({ cameraFov = 75, cameraPosition = new Vector3(0, 0, 1) }) => {
   const { show_asterisms, show_nametags, scale_nametags } = useGalaxyStore();
   const { data: constellations } = useConstellations();
 
@@ -54,3 +50,5 @@ export const Scene = ({
     </Canvas>
   );
 };
+
+export default Scene;

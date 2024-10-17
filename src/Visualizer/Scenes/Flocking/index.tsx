@@ -3,8 +3,6 @@ import { Canvas } from "@react-three/fiber";
 import { Vector3 } from "three";
 import { OrbitControls } from "@react-three/drei";
 
-export { DebugPanel } from "./components/DebugPanel";
-
 export const Scene = ({
   cameraFov = 75,
   cameraPosition = new Vector3(0, 0, 350),
@@ -28,3 +26,5 @@ export const Scene = ({
     </Canvas>
   );
 };
+
+export default Scene;
