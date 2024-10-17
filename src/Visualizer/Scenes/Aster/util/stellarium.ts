@@ -1,13 +1,9 @@
+import { useMemo } from "react";
 import { Constellation, Position, StarMetadata } from "../types";
-import kStarJson from "../hyglike_from_athyg_24.json";
-
-const kStarFilter = ({ distance, id }: StarMetadata) => !!distance || id === 0;
-export const kStars: StarMetadata[] = (kStarJson as StarMetadata[]).filter(
-  kStarFilter
-);
 
 export const getConstellationStars = (
-  constellations: Record<string, Constellation>
+  constellations: Record<string, Constellation>,
+  stars: StarMetadata[]
 ): Record<string, Constellation> => {
   const ids = Object.values(constellations)
     .map(({ connections }) => {
@@ -16,7 +12,7 @@ export const getConstellationStars = (
     .flat();
 
   const starMap = Object.fromEntries(
-    kStars
+    stars
       .filter(({ idHIP }) => idHIP && ids.includes(idHIP))
       .map((star) => [star.idHIP, star])
   );
@@ -71,12 +67,19 @@ export const parseStellariumConstellations = (
     })
     .filter(([_, proper]) => !!proper);
 
-  const constellations = Object.fromEntries(
+  return Object.fromEntries(
     graphs.map(([key, connections], i) => {
       const proper = names.find(([k, _]) => k === key)?.[1];
       return [key, { key, connections, proper, _raw: graphRows[i] }];
     })
   );
+};
 
-  return getConstellationStars(constellations);
+export const useConstellationStars = (
+  stars: StarMetadata[],
+  constellations: Record<string, Constellation>
+): Record<string, Constellation> => {
+  return useMemo(() => {
+    return getConstellationStars(constellations, stars);
+  }, [stars, constellations]);
 };
