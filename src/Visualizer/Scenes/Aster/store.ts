@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { CONFIG } from "./config";
 
 export interface GalaxyState {
+  show_asterisms: boolean;
   show_nametags: boolean;
   scale_nametags: boolean;
 

@@ -4,6 +4,34 @@ import { useMemo } from "react";
 import { Vector3 } from "three";
 import { StarMetadata } from "../types";
 
+export interface NametagProps {
+  proper: string;
+  position: Vector3;
+  transform: boolean;
+  color?: string;
+  opacity?: number;
+}
+
+export const Nametag = (props: NametagProps) => {
+  const { color, proper, position, transform, opacity = 0.5 } = props;
+
+  return (
+    <Html position={position} scale={0.05} transform={transform}>
+      <Typography
+        variant="caption"
+        sx={{
+          color,
+          opacity,
+          userSelect: "none",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {proper}
+      </Typography>
+    </Html>
+  );
+};
+
 export const Nametags = ({
   stars,
   transform,
@@ -23,25 +51,15 @@ export const Nametags = ({
 
   return (
     <>
-      {nametags.map(({ id, proper, position }, i) => (
-        <Html
-          key={`${i}-${proper}`}
+      {nametags.map(({ id, proper, position }) => (
+        <Nametag
+          key={id}
+          proper={proper}
           position={position}
-          scale={0.05}
           transform={transform}
-        >
-          <Typography
-            variant="caption"
-            sx={{
-              color: "rgb(0, 200, 225)",
-              opacity: id === 0 ? 1 : 0.5,
-              userSelect: "none",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {proper}
-          </Typography>
-        </Html>
+          color="rgb(255, 180, 50)"
+          opacity={id === 0 ? 1 : 0.5}
+        />
       ))}
     </>
   );

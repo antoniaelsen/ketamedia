@@ -13,6 +13,7 @@ def csv_to_json(csv_file_path, output_file_path):
             try:
                 obj = {
                     "id": int(row[0]),
+                    "idHIP": int(row[1]) if row[1] else None,
                     "proper": row[6],
                     "ra": float(row[7]) * 15,
                     "dec": float(row[8]),
