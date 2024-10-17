@@ -4,6 +4,7 @@ import { getVisualizer } from "./visualizers";
 
 export const Visualizer = (props: BoxProps) => {
   const visualizer = useAppStore((state) => state.visualizer);
+  console.log("Visualizer:", visualizer);
 
   const { scene: Scene } = getVisualizer(visualizer);
 

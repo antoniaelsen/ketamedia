@@ -5,9 +5,11 @@ import { Vector3 } from "three";
 export { DebugPanel } from "./components/DebugPanel";
 import { Nametags } from "./components/Nametags";
 import { InstancedStarField } from "./components/StarField";
-import STAR_JSON from "./hyglike_from_athyg_24.json";
 import { StarMetadata } from "./types";
 import { useGalaxyStore } from "./store";
+import STAR_JSON from "./hyglike_from_athyg_24.json";
+import { useMemo } from "react";
+import { getIsMobile } from "util/hooks/use-is-mobile";
 
 const STARS: StarMetadata[] = (STAR_JSON as StarMetadata[]).filter(
   ({ distance, id }: StarMetadata) => !!distance || id === 0
@@ -18,6 +20,16 @@ export const Scene = ({
   cameraPosition = new Vector3(0, 0, 1),
 }) => {
   const { show_nametags, scale_nametags } = useGalaxyStore();
+
+  const stars = useMemo(() => {
+    const isMobile = getIsMobile();
+
+    if (isMobile) {
+      return STARS.filter((s, i) => !!s.proper || i % 10 === 0);
+    }
+
+    return STARS;
+  }, []);
 
   return (
     <Canvas
@@ -34,8 +46,8 @@ export const Scene = ({
 
       <OrbitControls makeDefault />
 
-      <InstancedStarField stars={STARS} />
-      {show_nametags && <Nametags stars={STARS} transform={scale_nametags} />}
+      <InstancedStarField stars={stars} />
+      {show_nametags && <Nametags stars={stars} transform={scale_nametags} />}
 
       <pointLight color={"rgb(255, 200, 0)"} distance={100} intensity={1} />
     </Canvas>
