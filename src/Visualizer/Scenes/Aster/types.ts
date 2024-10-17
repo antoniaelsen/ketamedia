@@ -2,6 +2,9 @@ export interface StarMetadata {
   // id in the ATHYG database
   id: number;
 
+  // id in the Hipparcos catalog
+  idHip: number;
+
   // id in the Tycho-2 catalog
   idTycho: string;
 

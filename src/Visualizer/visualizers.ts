@@ -5,7 +5,7 @@ import {
 import {
   Scene as GalaxyScene,
   DebugPanel as GalaxyDebugPanel,
-} from "./Scenes/Galaxy";
+} from "./Scenes/Aster";
 
 export const VISUALIZERS: {
   [key: string]: { scene: React.ElementType; debug?: React.ElementType };
