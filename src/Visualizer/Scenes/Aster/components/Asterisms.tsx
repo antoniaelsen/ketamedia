@@ -29,8 +29,12 @@ const useHoverSelect = () => {
   return { selected, onPointerEnter, onPointerLeave };
 };
 
-const Asterism = (props: { constellation: Constellation; opacity: number }) => {
-  const { constellation, opacity = 0.25 } = props;
+const Asterism = (props: {
+  constellation: Constellation;
+  opacity: number;
+  showNametag: boolean;
+}) => {
+  const { constellation, opacity = 0.25, showNametag } = props;
   const { proper } = constellation;
   const { selected, onPointerEnter, onPointerLeave } = useHoverSelect();
 
@@ -74,7 +78,7 @@ const Asterism = (props: { constellation: Constellation; opacity: number }) => {
             points={pair}
           />
 
-          {selected && !!proper && (
+          {!!proper && (selected || showNametag) && (
             <Nametag
               key={i}
               color={color}
@@ -91,8 +95,9 @@ const Asterism = (props: { constellation: Constellation; opacity: number }) => {
 
 export const Asterisms = (props: {
   constellations: Record<string, Constellation>;
+  showNametags: boolean;
 }) => {
-  const { constellations } = props;
+  const { constellations, showNametags } = props;
 
   let opacity = 0.25;
   useFrame((state) => {
@@ -111,6 +116,7 @@ export const Asterisms = (props: {
         .map((constellation) => (
           <Asterism
             key={constellation.key}
+            showNametag={showNametags}
             constellation={constellation}
             opacity={opacity}
           />

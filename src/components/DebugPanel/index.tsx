@@ -8,8 +8,7 @@ import {
   BoxProps,
 } from "@mui/material";
 import { InputSlider } from "../InputSlider";
-
-export type DebugValue = number | number[] | boolean;
+import { DebugValue } from "types";
 
 const NumberControl = (props: any) => {
   const { config, value, setValue } = props;
@@ -124,12 +123,14 @@ export interface DebugPanelProps extends CardProps {
       step?: number | number[];
     };
   };
+  header?: React.ReactNode | React.ReactNode[];
+  footer?: React.ReactNode | React.ReactNode[];
   state: { [key: string]: DebugValue };
   setVariable: (key: string, value: DebugValue) => void;
 }
 
 export const DebugPanel = (props: DebugPanelProps) => {
-  const { config, state, setVariable, ...rest } = props;
+  const { config, footer, header, state, setVariable, ...rest } = props;
 
   return (
     <Card
@@ -142,10 +143,15 @@ export const DebugPanel = (props: DebugPanelProps) => {
       {...rest}
     >
       <Box sx={{ overflowY: "scroll", height: "100%" }}>
-        <Stack>
+        <Stack spacing={1}>
+          {header}
+
           {Object.entries(config).map(([key, config]) => {
             const value = state[key];
             const setValue = (value: DebugValue) => setVariable(key, value);
+            if (!["number", "boolean"].includes(typeof value)) {
+              return null;
+            }
 
             return (
               <ValueField
@@ -156,6 +162,8 @@ export const DebugPanel = (props: DebugPanelProps) => {
               />
             );
           })}
+
+          {footer}
         </Stack>
       </Box>
     </Card>

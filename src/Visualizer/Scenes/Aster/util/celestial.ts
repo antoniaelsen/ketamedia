@@ -1,4 +1,5 @@
 import { Color } from "three";
+import { toDegrees, toRadians } from "util/coordinates";
 
 export const getColorFromBV = (bv: number) => {
   const t = 4600 * (1 / (0.92 * bv + 1.7) + 1 / (0.92 * bv + 0.62));
@@ -53,4 +54,40 @@ export const getColorFromBV = (bv: number) => {
   const B = b <= 0.0031308 ? 12.92 * b : 1.055 * Math.pow(b, 1 / 0.5) - 0.055;
 
   return new Color(R, G, B);
+};
+
+export const gpsToCelestial = (
+  latitude: number,
+  longitude: number,
+  t: Date = new Date()
+) => {
+  const latRad = toRadians(latitude);
+
+  // Calculate the Julian Date
+  const JD = t.getTime() / 86400000 + 2440587.5;
+
+  // Calculate Greenwich Mean Sidereal Time (GMST)
+  const GMST = (18.697374558 + 24.06570982441908 * (JD - 2451545)) % 24;
+
+  // Calculate Local Sidereal Time (LST)
+  const LST = (GMST + longitude / 15) % 24;
+  const LSTRad = (LST * Math.PI) / 12;
+
+  let ra = toDegrees(
+    Math.atan2(
+      Math.sin(LSTRad),
+      Math.cos(LSTRad) * Math.sin(latRad) - Math.tan(0) * Math.cos(latRad)
+    )
+  );
+  const dec = toDegrees(
+    Math.asin(
+      Math.sin(latRad) * Math.sin(0) +
+        Math.cos(latRad) * Math.cos(0) * Math.cos(LSTRad)
+    )
+  );
+
+  // Ensure RA is in the range [0, 360)
+  ra = (ra + 360) % 360;
+
+  return { ra, dec };
 };

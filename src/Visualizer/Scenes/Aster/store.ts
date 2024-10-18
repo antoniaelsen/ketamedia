@@ -1,20 +1,52 @@
 import { create } from "zustand";
+import { OrbitControls } from "three-stdlib";
 import { CONFIG } from "./config";
+import { kSkycultureUrls } from "./api/stellarium";
+import { DebugValue } from "types";
 
-export interface GalaxyState {
+export interface AsterState {
+  camera: THREE.Camera | null;
+  controls: OrbitControls | null;
+  setCamera: (
+    camera: THREE.Camera | null,
+    controls: OrbitControls | null
+  ) => void;
+
+  // Config
+  orbiting: boolean;
+  orbit_lock: boolean;
+  orbit_wait_ms: number;
+  skyculture: keyof typeof kSkycultureUrls;
   show_asterisms: boolean;
-  show_nametags: boolean;
+  show_asterism_nametags: boolean;
+  show_star_nametags: boolean;
   scale_nametags: boolean;
 
-  setVariable: (key: string, value: number | number[] | boolean) => void;
+  setVariable: (key: string, value: DebugValue) => void;
 }
 
-export const useGalaxyStore = create<GalaxyState>((set) => ({
+export const useAsterStore = create<AsterState>((set) => ({
+  camera: null,
+  controls: null,
+
+  setCamera: (camera: THREE.Camera | null, controls: any | null) =>
+    set({ camera, controls }),
+
+  // Config
   ...(Object.entries(CONFIG).reduce(
     (acc, [key, { initial }]) => ({ ...acc, [key]: initial }),
     {}
-  ) as GalaxyState),
+  ) as Omit<AsterState, "camera" | "controls" | "setCamera">),
 
-  setVariable: (key: string, value: number | number[] | boolean) =>
-    set({ [key]: value }),
+  setVariable: (key: string, value: DebugValue) => set({ [key]: value }),
 }));
+
+export const useCamera = () => {
+  const { camera, controls, setCamera } = useAsterStore((s) => ({
+    camera: s.camera,
+    controls: s.controls,
+    setCamera: s.setCamera,
+  }));
+
+  return { camera, controls, setCamera };
+};

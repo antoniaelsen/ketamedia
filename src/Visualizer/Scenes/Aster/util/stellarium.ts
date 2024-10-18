@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { Constellation, Position, StarMetadata } from "../types";
+import { humanize } from "util/string";
 
 export const getConstellationStars = (
   constellations: Record<string, Constellation>,
@@ -43,27 +44,31 @@ export const parseStellariumConstellations = (
   namesRaw: string
 ): Record<string, Constellation> => {
   const graphRows = graphsRaw.split("\n");
-  const graphs = graphRows.map((row: string) => {
-    const [key, ...star_ids] = row.split(" ");
-    const ints = star_ids.map((id) => parseInt(id, 10)).filter(Boolean);
-    const ids = ints.slice(1);
-    const pairs = [];
+  const graphs = graphRows
+    .filter((row) => !row.startsWith("#"))
+    .map((row) => {
+      const [key, ...star_ids] = row.split(/[\s\t]+/);
+      const ints = star_ids.map((id) => parseInt(id, 10)).filter(Boolean);
+      const ids = ints.slice(1);
+      const pairs = [];
 
-    if (ids.length % 2 !== 0) {
-    } else {
-      for (let i = 0; i < ids.length - 1; i += 2) {
-        pairs.push([ids[i], ids[i + 1]]);
+      if (ids.length % 2 !== 0) {
+      } else {
+        for (let i = 0; i < ids.length - 1; i += 2) {
+          pairs.push([ids[i], ids[i + 1]]);
+        }
       }
-    }
 
-    return [key, pairs];
-  });
+      return [key, pairs];
+    });
 
   const nameRows = namesRaw.split("\n");
   const names = nameRows
+    .filter((row) => !row.startsWith("#") && !row.startsWith("."))
     .map((row: string) => {
       const [key, proper, ..._] = row.split("\t");
-      return [key, proper?.replace(/\"/g, "")];
+      const formatted = proper ? humanize(proper) : "";
+      return [key, formatted];
     })
     .filter(([_, proper]) => !!proper);
 

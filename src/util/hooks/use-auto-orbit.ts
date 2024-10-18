@@ -9,56 +9,65 @@ const kDefaultOrbitConfig: OrbitConfig = {
   speed: 0.1,
 };
 
-export const useAutoOrbit = (
-  waitMs: number = 25 * 1000,
-  config: OrbitConfig = kDefaultOrbitConfig
-) => {
+export const useAutoOrbit = ({
+  orbiting,
+  orbitLock,
+  setOrbiting,
+  setOrbitLock,
+  waitMs = 25 * 1000,
+  config = kDefaultOrbitConfig,
+}: {
+  orbiting: boolean;
+  orbitLock: boolean;
+  setOrbiting: (orbiting: boolean) => void;
+  setOrbitLock: (orbitLock: boolean) => void;
+  waitMs: number;
+  config?: OrbitConfig;
+}) => {
   const timer = useRef(0);
   const start = useRef(Date.now());
-  const orbiting = useRef(false);
-  const orbitOff = useRef(false);
   const controls = useRef<any | null>(null);
 
   const { speed } = config;
 
   const reset = useCallback(() => {
     start.current = Date.now();
-    orbiting.current = false;
+    setOrbiting(false);
 
     if (timer.current) {
       clearTimeout(timer.current);
     }
 
-    if (orbitOff.current) {
+    if (orbitLock) {
       return;
     }
 
     timer.current = setTimeout(() => {
-      orbiting.current = true;
+      setOrbiting(true);
     }, waitMs);
   }, [waitMs]);
 
   const toggle = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "o") {
-        orbiting.current = !orbiting.current;
-        if (!orbiting.current) {
+        setOrbiting(!orbiting);
+        if (!orbiting) {
           timer.current = setTimeout(() => {
-            orbiting.current = true;
+            setOrbiting(true);
           }, waitMs);
         }
       } else if (e.key === "O") {
-        orbitOff.current = !orbitOff.current;
-        if (orbitOff.current) {
-          orbiting.current = false;
+        setOrbitLock(!orbitLock);
+        if (orbitLock) {
+          setOrbiting(false);
         } else {
           timer.current = setTimeout(() => {
-            orbiting.current = true;
+            setOrbiting(true);
           }, waitMs);
         }
       }
     },
-    [waitMs]
+    [orbiting, orbitLock, waitMs, setOrbiting, setOrbitLock]
   );
 
   useEffect(() => {
@@ -66,14 +75,11 @@ export const useAutoOrbit = (
     if (!canvas) {
       return;
     }
-    timer.current = setTimeout(() => {
-      orbiting.current = true;
-    }, waitMs);
 
     window.addEventListener("keydown", toggle);
     canvas.addEventListener("pointerdown", reset);
-    canvas.addEventListener("touchmove", reset);
-    canvas.addEventListener("wheel", reset);
+    canvas.addEventListener("touchmove", reset, { passive: true });
+    canvas.addEventListener("wheel", reset, { passive: true });
 
     return () => {
       window.removeEventListener("keydown", toggle);
@@ -86,9 +92,13 @@ export const useAutoOrbit = (
     };
   }, [reset, toggle]);
 
+  useEffect(() => {
+    reset();
+  }, [orbitLock, reset]);
+
   useFrame((state) => {
     const camera = state.camera;
-    if (!orbiting.current || !camera || !controls.current) {
+    if (!orbiting || !camera || !controls.current) {
       return;
     }
     const time = Date.now() * 0.0001;

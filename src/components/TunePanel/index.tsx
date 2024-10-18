@@ -12,7 +12,6 @@ export const TunePanel = () => {
       sx={{
         display: "flex",
         justifyContent: "center",
-        height: 360,
       }}
     >
       {Component && <Component />}

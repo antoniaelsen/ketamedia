@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { CONFIG } from "./config";
+import { DebugValue } from "types";
 
 export interface FlockingState {
   n_boids: number;
@@ -24,7 +25,7 @@ export interface FlockingState {
 
   debug: boolean;
 
-  setVariable: (key: string, value: number | number[] | boolean) => void;
+  setVariable: (key: string, value: DebugValue) => void;
 }
 
 export const useFlockingStore = create<FlockingState>((set) => ({
@@ -33,6 +34,5 @@ export const useFlockingStore = create<FlockingState>((set) => ({
     {}
   ) as FlockingState),
 
-  setVariable: (key: string, value: number | number[] | boolean) =>
-    set({ [key]: value }),
+  setVariable: (key: string, value: DebugValue) => set({ [key]: value }),
 }));

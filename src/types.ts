@@ -6,3 +6,5 @@ export interface ConfigProp {
   step?: number | number[];
   legend?: string[];
 }
+
+export type DebugValue = number | number[] | boolean | string;

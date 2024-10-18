@@ -11,7 +11,7 @@ import {
   Vector2,
 } from "three";
 import { StarMetadata } from "../types";
-import { getColorFromBV } from "../util/threejs";
+import { getColorFromBV } from "../util/celestial";
 
 export const InstancedStarField = ({
   stars,
