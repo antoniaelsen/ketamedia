@@ -59,35 +59,43 @@ export const getColorFromBV = (bv: number) => {
 export const gpsToCelestial = (
   latitude: number,
   longitude: number,
-  t: Date = new Date()
+  date = new Date()
 ) => {
-  const latRad = toRadians(latitude);
+  const calculateJulianDay = (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const a = Math.floor((14 - month) / 12);
+    const y = year + 4800 - a;
+    const m = month + 12 * a - 3;
+    return (
+      day +
+      Math.floor((153 * m + 2) / 5) +
+      365 * y +
+      Math.floor(y / 4) -
+      Math.floor(y / 100) +
+      Math.floor(y / 400) -
+      32045
+    );
+  };
 
-  // Calculate the Julian Date
-  const JD = t.getTime() / 86400000 + 2440587.5;
+  const jd = calculateJulianDay(date);
+  const t = (jd - 2451545.0) / 36525;
 
   // Calculate Greenwich Mean Sidereal Time (GMST)
-  const GMST = (18.697374558 + 24.06570982441908 * (JD - 2451545)) % 24;
+  let gmst =
+    280.46061837 +
+    360.98564736629 * (jd - 2451545.0) +
+    0.000387933 * t * t -
+    (t * t * t) / 38710000;
+  gmst = ((gmst % 360) + 360) % 360;
 
   // Calculate Local Sidereal Time (LST)
-  const LST = (GMST + longitude / 15) % 24;
-  const LSTRad = (LST * Math.PI) / 12;
+  const lst = (gmst + longitude + 360) % 360;
 
-  let ra = toDegrees(
-    Math.atan2(
-      Math.sin(LSTRad),
-      Math.cos(LSTRad) * Math.sin(latRad) - Math.tan(0) * Math.cos(latRad)
-    )
-  );
-  const dec = toDegrees(
-    Math.asin(
-      Math.sin(latRad) * Math.sin(0) +
-        Math.cos(latRad) * Math.cos(0) * Math.cos(LSTRad)
-    )
-  );
+  const ra = lst;
 
-  // Ensure RA is in the range [0, 360)
-  ra = (ra + 360) % 360;
+  const dec = toDegrees(Math.asin(Math.sin(toRadians(latitude))));
 
   return { ra, dec };
 };

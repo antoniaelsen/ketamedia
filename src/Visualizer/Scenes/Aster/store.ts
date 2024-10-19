@@ -19,6 +19,8 @@ export interface AsterState {
   skyculture: keyof typeof kSkycultureUrls;
   show_asterisms: boolean;
   show_asterism_nametags: boolean;
+  show_grid: boolean;
+  show_stars: boolean;
   show_star_nametags: boolean;
   scale_nametags: boolean;
 

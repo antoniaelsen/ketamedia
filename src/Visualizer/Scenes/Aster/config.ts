@@ -28,6 +28,14 @@ export const CONFIG: Record<string, ConfigProp> = {
     label: "show constellation nametags",
     initial: false,
   },
+  show_grid: {
+    label: "show celestial grid",
+    initial: true,
+  },
+  show_stars: {
+    label: "show stars",
+    initial: true,
+  },
   show_star_nametags: {
     label: "show star nametags",
     initial: false,

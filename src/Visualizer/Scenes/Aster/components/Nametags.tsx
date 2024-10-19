@@ -1,14 +1,14 @@
 import { Typography } from "@mui/material";
 import { Html } from "@react-three/drei";
 import { useMemo } from "react";
-import { Vector3 } from "three";
+import { Color, Vector3 } from "three";
 import { StarMetadata } from "../types";
 
 export interface NametagProps {
   proper: string;
   position: Vector3;
   transform: boolean;
-  color?: string;
+  color?: string | Color | [number, number, number];
   opacity?: number;
 }
 

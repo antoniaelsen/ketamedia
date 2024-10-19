@@ -30,7 +30,7 @@ export const requestLocation = async (): Promise<GeolocationPosition> => {
       const geostr = localStorage.getItem("geo");
       if (geostr) {
         const geo = JSON.parse(geostr);
-        if (geo.position && Date.now() - geo.t! < 1000 * 60 * 5) {
+        if (geo.position && Date.now() - geo.t! < 1000 * 60 * 30) {
           resolve(geo.position);
         }
       }

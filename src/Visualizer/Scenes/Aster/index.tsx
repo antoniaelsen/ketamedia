@@ -1,7 +1,7 @@
 import { OrbitControls } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import { useMemo } from "react";
-import { Vector3 } from "three";
+import { Euler, Vector3 } from "three";
 
 import { Canvas } from "components/Canvas";
 import { LoadingSpinner } from "components/LoadingSpinner";
@@ -16,6 +16,8 @@ import { Asterisms } from "./components/Asterisms";
 import { useAsterStore, useCamera } from "./store";
 import { Constellation, StarMetadata } from "./types";
 import { useConstellationStars } from "./util/stellarium";
+import { CelestialGrid } from "./components/CelestialGrid";
+import { Axes } from "components/three/Axes";
 
 const kEmptyStars: StarMetadata[] = [];
 const kEmptyConstellations: Record<string, Constellation> = {};
@@ -76,7 +78,7 @@ const Base = ({ children }: { children?: React.ReactNode }) => {
 
 const Scene = ({
   cameraFov = 75,
-  cameraPosition = new Vector3(0, 0, 1),
+  cameraPosition = new Vector3(-1, 0, 0),
 }: {
   cameraFov?: number;
   cameraPosition?: Vector3;
@@ -85,6 +87,8 @@ const Scene = ({
     skyculture,
     show_asterisms,
     show_asterism_nametags,
+    show_grid,
+    show_stars,
     show_star_nametags,
     scale_nametags,
   } = useAsterStore();
@@ -129,7 +133,8 @@ const Scene = ({
       }}
     >
       <Base>
-        <InstancedStarField stars={stars} />
+        {show_grid && <CelestialGrid />}
+        {show_stars && <InstancedStarField stars={stars} />}
         {show_asterisms && constellations && (
           <Asterisms
             constellations={constellationsWithStars}
