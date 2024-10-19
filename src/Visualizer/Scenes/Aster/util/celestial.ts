@@ -1,5 +1,5 @@
 import { Color } from "three";
-import { toDegrees, toRadians } from "util/coordinates";
+import { toRadians } from "util/coordinates";
 
 export const getColorFromBV = (bv: number) => {
   const t = 4600 * (1 / (0.92 * bv + 1.7) + 1 / (0.92 * bv + 0.62));

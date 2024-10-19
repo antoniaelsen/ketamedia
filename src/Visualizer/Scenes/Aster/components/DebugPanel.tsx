@@ -15,7 +15,7 @@ import { useCallback } from "react";
 import { requestLocation } from "util/location";
 import { gpsToCelestial } from "../util/celestial";
 import { Vector3 } from "three";
-import { toDegrees, toRadians } from "util/coordinates";
+import { toDegrees } from "util/coordinates";
 
 const kSkycultureOptions = Object.keys(kSkycultureUrls).map((key) => ({
   label: humanize(key),

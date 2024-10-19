@@ -1,9 +1,9 @@
 import { OrbitControls, Sphere } from "@react-three/drei";
-import { useThree } from "@react-three/fiber";
+import { GroupProps, useThree } from "@react-three/fiber";
 import { Bloom, EffectComposer, GodRays } from "@react-three/postprocessing";
 import { useMemo, useRef } from "react";
-import { BlendFunction, KernelSize, Resizer } from "postprocessing";
-import { Euler, Mesh, Vector3 } from "three";
+import { BlendFunction, KernelSize } from "postprocessing";
+import { Mesh, Vector3 } from "three";
 
 import { Canvas } from "components/Canvas";
 import { LoadingSpinner } from "components/LoadingSpinner";
@@ -19,11 +19,9 @@ import { Nametags } from "./components/Nametags";
 import { InstancedStarField } from "./components/StarField";
 import { useAsterStore, useCamera } from "./store";
 import { Constellation, StarMetadata } from "./types";
-import { Axes } from "components/three/Axes";
 
 const kEmptyStars: StarMetadata[] = [];
 const kEmptyConstellations: Record<string, Constellation> = {};
-const kWorldRotation = new Euler(0, 0, 0);
 
 const useAutoOrbitAster = () => {
   const { orbiting, orbitLock, orbitWaitMs, setOrbiting, setOrbitLock } =
