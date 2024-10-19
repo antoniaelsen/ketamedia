@@ -26,7 +26,7 @@ export const InstancedStarField = ({
     () =>
       new MeshStandardMaterial({
         emissive: "rgb(255, 255, 225)",
-        emissiveIntensity: 0.3,
+        emissiveIntensity: 0.25,
       }),
     []
   );
