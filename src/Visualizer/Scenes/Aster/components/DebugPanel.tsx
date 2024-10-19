@@ -35,6 +35,7 @@ const useOnZenith = () => {
       const { latitude, longitude } = position.coords;
       const { ra, dec } = gpsToCelestial(latitude, longitude);
       camera.position.set(0, 0, 0.001);
+      controls.target.set(0, 0, 0);
 
       // convert ra, dec to angle for camera (assuming camera is at sol / earth)
       const angle = Math.atan2(dec, ra);

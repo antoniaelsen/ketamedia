@@ -1,8 +1,9 @@
-import { OrbitControls } from "@react-three/drei";
+import { OrbitControls, Sphere } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
-import { Bloom, EffectComposer } from "@react-three/postprocessing";
-import { useMemo } from "react";
-import { Vector3 } from "three";
+import { Bloom, EffectComposer, GodRays } from "@react-three/postprocessing";
+import { useMemo, useRef } from "react";
+import { BlendFunction, KernelSize, Resizer } from "postprocessing";
+import { Mesh, Vector3 } from "three";
 
 import { Canvas } from "components/Canvas";
 import { LoadingSpinner } from "components/LoadingSpinner";
@@ -11,13 +12,13 @@ import { getIsMobile } from "util/hooks/use-is-mobile";
 
 import { useStars } from "./api/ketamedia";
 import { useConstellations } from "./api/stellarium";
+import { useConstellationStars } from "./util/stellarium";
+import { Asterisms } from "./components/Asterisms";
+import { CelestialGrid } from "./components/CelestialGrid";
 import { Nametags } from "./components/Nametags";
 import { InstancedStarField } from "./components/StarField";
-import { Asterisms } from "./components/Asterisms";
 import { useAsterStore, useCamera } from "./store";
 import { Constellation, StarMetadata } from "./types";
-import { useConstellationStars } from "./util/stellarium";
-import { CelestialGrid } from "./components/CelestialGrid";
 
 const kEmptyStars: StarMetadata[] = [];
 const kEmptyConstellations: Record<string, Constellation> = {};
@@ -83,6 +84,7 @@ const Scene = ({
   cameraFov?: number;
   cameraPosition?: Vector3;
 }) => {
+  const sol = useRef<Mesh>(null);
   const {
     skyculture,
     show_asterisms,
@@ -134,7 +136,18 @@ const Scene = ({
     >
       <Base>
         {show_grid && <CelestialGrid />}
-        {show_stars && <InstancedStarField stars={stars} />}
+        {show_stars && (
+          <>
+            <Sphere ref={sol} scale={0.05}>
+              <meshStandardMaterial
+                color="rgb(255, 225, 100)"
+                emissive="rgb(255, 225, 100)"
+                emissiveIntensity={0.8}
+              />
+            </Sphere>
+            <InstancedStarField stars={stars} />
+          </>
+        )}
         {show_asterisms && constellations && (
           <Asterisms
             constellations={constellationsWithStars}
@@ -147,6 +160,20 @@ const Scene = ({
       </Base>
       <EffectComposer>
         <Bloom luminanceThreshold={0} luminanceSmoothing={1} height={300} />
+        {
+          <GodRays
+            sun={sol as any}
+            blendFunction={BlendFunction.SCREEN}
+            samples={60}
+            density={1}
+            decay={0.9}
+            weight={1}
+            exposure={0.6}
+            clampMax={1}
+            kernelSize={KernelSize.SMALL}
+            blur={true}
+          />
+        }
       </EffectComposer>
     </Canvas>
   );
