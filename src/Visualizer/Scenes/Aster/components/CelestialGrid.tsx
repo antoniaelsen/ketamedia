@@ -6,6 +6,24 @@ import { Nametag } from "./Nametags";
 
 const kBaseScaleFactor = 1000;
 const kLineWidth = 1.5;
+const kRotationMatrix = new Matrix4().set(
+  1,
+  0,
+  0,
+  0,
+  0,
+  0,
+  1,
+  0,
+  0,
+  1,
+  0,
+  0,
+  0,
+  0,
+  0,
+  1
+);
 export interface CelestialGridProps extends GroupProps {
   color?: string | Color;
 }
@@ -52,8 +70,6 @@ const useGridlines = () => {
 };
 
 const useNametags = () => {
-  const rotationMatrix = new Matrix4().makeRotationX(-Math.PI / 2);
-
   const hourTags = Array.from({ length: 24 }, (_, i) => i * 15).map((lon) => {
     const hours = lon / 15;
     const proper = `${hours.toString().padStart(2, "0")}h`;
@@ -61,7 +77,7 @@ const useNametags = () => {
       kBaseScaleFactor * Math.cos(lon * (Math.PI / 180)),
       0,
       kBaseScaleFactor * Math.sin(lon * (Math.PI / 180))
-    ).applyMatrix4(rotationMatrix);
+    ).applyMatrix4(kRotationMatrix);
     return { proper, position: tagPosition, type: "hour" };
   });
 
@@ -73,7 +89,7 @@ const useNametags = () => {
       kBaseScaleFactor * Math.sin((90 - lat) * (Math.PI / 180)),
       kBaseScaleFactor * Math.cos((90 - lat) * (Math.PI / 180)),
       0
-    ).applyMatrix4(rotationMatrix);
+    ).applyMatrix4(kRotationMatrix);
     return { proper, position: tagPosition, type: "latitude" };
   });
 

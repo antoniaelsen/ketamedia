@@ -56,6 +56,13 @@ export const getColorFromBV = (bv: number) => {
   return new Color(R, G, B);
 };
 
+/**
+ * Find the celestial coordinates (ra, dec) in radians for a given GPS coordinate and date.
+ * @param latitude
+ * @param longitude
+ * @param date
+ * @returns
+ */
 export const gpsToCelestial = (
   latitude: number,
   longitude: number,
@@ -93,9 +100,9 @@ export const gpsToCelestial = (
   // Calculate Local Sidereal Time (LST)
   const lst = (gmst + longitude + 360) % 360;
 
-  const ra = lst;
+  const ra = toRadians(lst);
 
-  const dec = toDegrees(Math.asin(Math.sin(toRadians(latitude))));
+  const dec = Math.asin(Math.sin(toRadians(latitude)));
 
   return { ra, dec };
 };

@@ -14,6 +14,8 @@ import { humanize } from "util/string";
 import { useCallback } from "react";
 import { requestLocation } from "util/location";
 import { gpsToCelestial } from "../util/celestial";
+import { Vector3 } from "three";
+import { toDegrees, toRadians } from "util/coordinates";
 
 const kSkycultureOptions = Object.keys(kSkycultureUrls).map((key) => ({
   label: humanize(key),
@@ -34,12 +36,30 @@ const useOnZenith = () => {
 
       const { latitude, longitude } = position.coords;
       const { ra, dec } = gpsToCelestial(latitude, longitude);
-      camera.position.set(0, 0, 0.001);
+      console.log(
+        `Current celestial coordinates: (ra: ${toDegrees(ra)}, dec: ${toDegrees(
+          dec
+        )})`
+      );
+
+      const radius = 1; // Unit sphere
+      const x = radius * Math.cos(dec) * Math.cos(ra);
+      const y = radius * Math.cos(dec) * Math.sin(ra);
+      const z = radius * Math.sin(dec);
+      const lookAtPosition = new Vector3(x, y, z);
+
+      const cameraDistance = 1;
+      const cameraPosition = lookAtPosition
+        .clone()
+        .multiplyScalar(-cameraDistance);
+
+      camera.position.copy(cameraPosition);
+
+      camera.up.set(0, 0, 1); // Set z as up
+      camera.lookAt(0, 0, 0);
+
       controls.target.set(0, 0, 0);
 
-      // convert ra, dec to angle for camera (assuming camera is at sol / earth)
-      const angle = Math.atan2(dec, ra);
-      camera.rotation.set(0, angle, 0);
       controls.update();
     } catch (error) {
       console.error("Error getting location", error);

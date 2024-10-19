@@ -3,7 +3,7 @@ import { useThree } from "@react-three/fiber";
 import { Bloom, EffectComposer, GodRays } from "@react-three/postprocessing";
 import { useMemo, useRef } from "react";
 import { BlendFunction, KernelSize, Resizer } from "postprocessing";
-import { Mesh, Vector3 } from "three";
+import { Euler, Mesh, Vector3 } from "three";
 
 import { Canvas } from "components/Canvas";
 import { LoadingSpinner } from "components/LoadingSpinner";
@@ -19,9 +19,11 @@ import { Nametags } from "./components/Nametags";
 import { InstancedStarField } from "./components/StarField";
 import { useAsterStore, useCamera } from "./store";
 import { Constellation, StarMetadata } from "./types";
+import { Axes } from "components/three/Axes";
 
 const kEmptyStars: StarMetadata[] = [];
 const kEmptyConstellations: Record<string, Constellation> = {};
+const kWorldRotation = new Euler(0, 0, 0);
 
 const useAutoOrbitAster = () => {
   const { orbiting, orbitLock, orbitWaitMs, setOrbiting, setOrbitLock } =
@@ -62,10 +64,11 @@ const useAutoOrbitAster = () => {
   return controlsRef;
 };
 
-const Base = ({ children }: { children?: React.ReactNode }) => {
+const Base = (props: GroupProps) => {
+  const { children, ...rest } = props;
   const controlsRef = useAutoOrbitAster();
   return (
-    <>
+    <group {...rest}>
       <color attach="background" args={[`rgb(5, 5, 20)`]} />
       <ambientLight intensity={0.8} />
       <OrbitControls ref={controlsRef} />
@@ -73,7 +76,7 @@ const Base = ({ children }: { children?: React.ReactNode }) => {
       {children}
 
       <pointLight color={"rgb(255, 200, 0)"} distance={100} intensity={1} />
-    </>
+    </group>
   );
 };
 
@@ -135,19 +138,16 @@ const Scene = ({
       }}
     >
       <Base>
+        <Sphere ref={sol} scale={0.05}>
+          <meshStandardMaterial
+            color="rgb(255, 225, 100)"
+            emissive="rgb(255, 225, 100)"
+            emissiveIntensity={0.8}
+            opacity={show_stars ? 1 : 0}
+          />
+        </Sphere>
         {show_grid && <CelestialGrid />}
-        {show_stars && (
-          <>
-            <Sphere ref={sol} scale={0.05}>
-              <meshStandardMaterial
-                color="rgb(255, 225, 100)"
-                emissive="rgb(255, 225, 100)"
-                emissiveIntensity={0.8}
-              />
-            </Sphere>
-            <InstancedStarField stars={stars} />
-          </>
-        )}
+        {show_stars && <InstancedStarField stars={stars} />}
         {show_asterisms && constellations && (
           <Asterisms
             constellations={constellationsWithStars}
@@ -160,20 +160,18 @@ const Scene = ({
       </Base>
       <EffectComposer>
         <Bloom luminanceThreshold={0} luminanceSmoothing={1} height={300} />
-        {
-          <GodRays
-            sun={sol as any}
-            blendFunction={BlendFunction.SCREEN}
-            samples={60}
-            density={1}
-            decay={0.9}
-            weight={1}
-            exposure={0.6}
-            clampMax={1}
-            kernelSize={KernelSize.SMALL}
-            blur={true}
-          />
-        }
+        <GodRays
+          sun={sol as any}
+          blendFunction={BlendFunction.SCREEN}
+          samples={60}
+          density={1}
+          decay={0.9}
+          weight={1}
+          exposure={0.6}
+          clampMax={1}
+          kernelSize={KernelSize.SMALL}
+          blur={true}
+        />
       </EffectComposer>
     </Canvas>
   );

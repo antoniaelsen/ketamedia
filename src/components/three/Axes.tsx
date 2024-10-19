@@ -20,6 +20,13 @@ export const Axes = (props: GroupProps) => {
         ]}
         color="green"
       />
+      <Line
+        points={[
+          [0, 0, 0],
+          [0, 0, 1],
+        ]}
+        color="blue"
+      />
       <Sphere position={[0, 0, 0]} scale={[2.5, 2.5, 2.5]}>
         <meshBasicMaterial
           attach="material"
