@@ -2,7 +2,7 @@ import { Line } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { uniqBy } from "lodash";
 import { Vector3 } from "three";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { Constellation, Position } from "../types";
 import { Nametag } from "./Nametags";
 
@@ -64,7 +64,7 @@ const Asterism = (props: {
         <group key={i}>
           <Line
             lineWidth={2}
-            opacity={selected ? 0.5 : opacity}
+            opacity={selected ? 0.25 : opacity}
             color={color}
             transparent
             points={pair}
@@ -99,14 +99,12 @@ export const Asterisms = (props: {
 }) => {
   const { constellations, showNametags } = props;
 
-  let opacity = 0.25;
+  const opacity = useRef(0.1);
   useFrame((state) => {
     const { camera } = state;
     const dist = camera.position.distanceTo(new Vector3(0, 0, 0));
 
-    const o = Math.max(0.05, 0.33 - (dist / 250) * 0.28);
-
-    opacity = o;
+    opacity.current = Math.max(0.01, 0.1 - dist / 1000);
   });
 
   return (
@@ -118,7 +116,7 @@ export const Asterisms = (props: {
             key={constellation.key}
             showNametag={showNametags}
             constellation={constellation}
-            opacity={opacity}
+            opacity={opacity.current}
           />
         ))}
     </>

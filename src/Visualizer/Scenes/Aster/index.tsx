@@ -1,7 +1,8 @@
 import { OrbitControls } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
+import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import { useMemo } from "react";
-import { Euler, Vector3 } from "three";
+import { Vector3 } from "three";
 
 import { Canvas } from "components/Canvas";
 import { LoadingSpinner } from "components/LoadingSpinner";
@@ -17,7 +18,6 @@ import { useAsterStore, useCamera } from "./store";
 import { Constellation, StarMetadata } from "./types";
 import { useConstellationStars } from "./util/stellarium";
 import { CelestialGrid } from "./components/CelestialGrid";
-import { Axes } from "components/three/Axes";
 
 const kEmptyStars: StarMetadata[] = [];
 const kEmptyConstellations: Record<string, Constellation> = {};
@@ -145,6 +145,9 @@ const Scene = ({
           <Nametags stars={stars} transform={scale_nametags} />
         )}
       </Base>
+      <EffectComposer>
+        <Bloom luminanceThreshold={0} luminanceSmoothing={1} height={300} />
+      </EffectComposer>
     </Canvas>
   );
 };

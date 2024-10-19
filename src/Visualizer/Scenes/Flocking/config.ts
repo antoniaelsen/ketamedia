@@ -6,7 +6,7 @@ const isMobile = getIsMobile();
 export const CONFIG: Record<string, ConfigProp> = {
   n_boids: {
     label: "# boids",
-    initial: isMobile ? 100 : 1000,
+    initial: isMobile ? 100 : 2500,
     min: 1,
     max: isMobile ? 10000 : 50000,
   },

@@ -22,7 +22,14 @@ export const InstancedStarField = ({
 }) => {
   const ref = useRef<InstancedMesh>(null);
 
-  const material = useMemo(() => new MeshStandardMaterial(), []);
+  const material = useMemo(
+    () =>
+      new MeshStandardMaterial({
+        emissive: "rgb(255, 255, 225)",
+        emissiveIntensity: 0.25,
+      }),
+    []
+  );
   const geometry = useMemo(
     () => new SphereGeometry(scale / 10, 24, 24),
     [scale]

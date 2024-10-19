@@ -5,6 +5,7 @@ import { GroupProps } from "@react-three/fiber";
 import { Nametag } from "./Nametags";
 
 const kBaseScaleFactor = 1000;
+const kLineWidth = 1.5;
 export interface CelestialGridProps extends GroupProps {
   color?: string | Color;
 }
@@ -92,7 +93,7 @@ export const CelestialGrid = (props: CelestialGridProps) => {
           key={`lat-${index}`}
           points={points}
           color={color}
-          lineWidth={3}
+          lineWidth={kLineWidth}
           transparent
           opacity={0.3}
         />
@@ -102,7 +103,7 @@ export const CelestialGrid = (props: CelestialGridProps) => {
           key={`lon-${index}`}
           points={points}
           color={color}
-          lineWidth={3}
+          lineWidth={kLineWidth}
           transparent
           opacity={0.3}
         />

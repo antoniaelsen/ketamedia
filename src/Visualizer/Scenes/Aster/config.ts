@@ -30,7 +30,7 @@ export const CONFIG: Record<string, ConfigProp> = {
   },
   show_grid: {
     label: "show celestial grid",
-    initial: true,
+    initial: false,
   },
   show_stars: {
     label: "show stars",
