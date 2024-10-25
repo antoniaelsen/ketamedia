@@ -60,16 +60,28 @@ const Scene = ({
   } = useAsterStore();
   const { data: stars } = useStars();
   const { data: constellations } = useConstellations(skyculture);
+  const isMobile = getIsMobile();
 
   const filtered = useMemo(() => {
-    const isMobile = getIsMobile();
+    const constellationStarIds = constellations
+      ? Array.from(
+          new Set(
+            Object.values(constellations).flatMap((c) =>
+              c.connections.flatMap(([a, b]) => [a, b])
+            ) ?? []
+          )
+        )
+      : [];
 
     if (isMobile) {
-      return (stars || []).filter((s, i) => !!s.proper || i % 10 === 0);
+      return (stars || []).filter(
+        (s, i) =>
+          !!s.proper || constellationStarIds.includes(s.idHIP) || i % 10 === 0
+      );
     }
 
     return stars;
-  }, [stars]);
+  }, [stars, constellations, isMobile]);
 
   const constellationsWithStars = useConstellationStars(
     filtered || kEmptyStars,
