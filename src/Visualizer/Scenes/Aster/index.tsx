@@ -67,7 +67,7 @@ const Base = (props: GroupProps) => {
   const controlsRef = useAutoOrbitAster();
   return (
     <group {...rest}>
-      <color attach="background" args={[`rgb(5, 5, 20)`]} />
+      <color attach="background" args={[`rgb(0, 0, 0)`]} />
       <ambientLight intensity={0.8} />
       <OrbitControls ref={controlsRef} />
 
@@ -134,6 +134,7 @@ const Scene = ({
         near: 0.0001,
         fov: cameraFov,
       }}
+      style={{ backgroundColor: "black" }}
     >
       <Base>
         <Sphere ref={sol} scale={0.05}>

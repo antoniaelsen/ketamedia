@@ -48,17 +48,13 @@ const useOnZenith = () => {
       const z = radius * Math.sin(dec);
       const lookAtPosition = new Vector3(x, y, z);
 
-      const cameraDistance = 1;
-      const cameraPosition = lookAtPosition
-        .clone()
-        .multiplyScalar(-cameraDistance);
-
-      camera.position.copy(cameraPosition);
+      // Set camera position to origin
+      camera.position.set(0, 0, 0);
 
       camera.up.set(0, 0, 1); // Set z as up
-      camera.lookAt(0, 0, 0);
+      camera.lookAt(lookAtPosition);
 
-      controls.target.set(0, 0, 0);
+      controls.target.copy(lookAtPosition);
 
       controls.update();
     } catch (error) {
