@@ -11,57 +11,12 @@ import {
 } from "@mui/material";
 import { kSkycultureUrls } from "../api/stellarium";
 import { humanize } from "util/string";
-import { useCallback } from "react";
-import { requestLocation } from "util/location";
-import { gpsToCelestial } from "../util/celestial";
-import { Vector3 } from "three";
-import { toDegrees } from "util/coordinates";
+import { useOnZenith } from "../util/hooks";
 
 const kSkycultureOptions = Object.keys(kSkycultureUrls).map((key) => ({
   label: humanize(key),
   value: key,
 }));
-
-const useOnZenith = () => {
-  const state = useAsterStore((s) => s);
-  const { camera, controls } = state;
-
-  return useCallback(async () => {
-    if (!camera || !controls) {
-      return;
-    }
-
-    try {
-      const position = await requestLocation();
-
-      const { latitude, longitude } = position.coords;
-      const { ra, dec } = gpsToCelestial(latitude, longitude);
-      console.log(
-        `Current celestial coordinates: (ra: ${toDegrees(ra)}, dec: ${toDegrees(
-          dec
-        )})`
-      );
-
-      const radius = 1; // Unit sphere
-      const x = radius * Math.cos(dec) * Math.cos(ra);
-      const y = radius * Math.cos(dec) * Math.sin(ra);
-      const z = radius * Math.sin(dec);
-      const lookAtPosition = new Vector3(x, y, z);
-
-      // Set camera position to origin
-      camera.position.set(0, 0, 0);
-
-      camera.up.set(0, 0, 1); // Set z as up
-      camera.lookAt(lookAtPosition);
-
-      controls.target.copy(lookAtPosition);
-
-      controls.update();
-    } catch (error) {
-      console.error("Error getting location", error);
-    }
-  }, [camera, controls]);
-};
 
 export const DebugPanel = () => {
   const state = useAsterStore((s) => s);

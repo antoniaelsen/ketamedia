@@ -16,6 +16,7 @@ export interface AsterState {
   orbiting: boolean;
   orbit_lock: boolean;
   orbit_wait_ms: number;
+  traveling: boolean;
   skyculture: keyof typeof kSkycultureUrls;
   show_asterisms: boolean;
   show_asterism_nametags: boolean;
@@ -23,6 +24,7 @@ export interface AsterState {
   show_stars: boolean;
   show_star_nametags: boolean;
   scale_nametags: boolean;
+  traveling_speed: number;
 
   setVariable: (key: string, value: DebugValue) => void;
 }

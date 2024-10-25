@@ -1,5 +1,5 @@
 import { OrbitControls, Sphere } from "@react-three/drei";
-import { GroupProps, useThree } from "@react-three/fiber";
+import { GroupProps } from "@react-three/fiber";
 import { Bloom, EffectComposer, GodRays } from "@react-three/postprocessing";
 import { useMemo, useRef } from "react";
 import { BlendFunction, KernelSize } from "postprocessing";
@@ -7,7 +7,6 @@ import { Mesh, Vector3 } from "three";
 
 import { Canvas } from "components/Canvas";
 import { LoadingSpinner } from "components/LoadingSpinner";
-import { useAutoOrbit } from "util/hooks/use-auto-orbit";
 import { getIsMobile } from "util/hooks/use-is-mobile";
 
 import { useStars } from "./api/ketamedia";
@@ -17,54 +16,18 @@ import { Asterisms } from "./components/Asterisms";
 import { CelestialGrid } from "./components/CelestialGrid";
 import { Nametags } from "./components/Nametags";
 import { InstancedStarField } from "./components/StarField";
-import { useAsterStore, useCamera } from "./store";
+import { useAsterStore } from "./store";
 import { Constellation, StarMetadata } from "./types";
+import { useAutoOrbitAster, useTravelling } from "./util/hooks";
 
 const kEmptyStars: StarMetadata[] = [];
 const kEmptyConstellations: Record<string, Constellation> = {};
 
-const useAutoOrbitAster = () => {
-  const { orbiting, orbitLock, orbitWaitMs, setOrbiting, setOrbitLock } =
-    useAsterStore((s) => ({
-      orbiting: s.orbiting,
-      orbitLock: s.orbit_lock,
-      orbitWaitMs: s.orbit_wait_ms,
-      setOrbiting: (orbiting: boolean) => {
-        if (s.orbit_lock) {
-          return;
-        }
-        s.setVariable("orbiting", orbiting);
-      },
-      setOrbitLock: (orbitLock: boolean) =>
-        s.setVariable("orbit_lock", orbitLock),
-    }));
-
-  const controlsRef = useAutoOrbit({
-    orbiting,
-    orbitLock,
-    waitMs: orbitWaitMs,
-    setOrbiting,
-    setOrbitLock,
-  });
-  const { camera, setCamera } = useCamera();
-
-  useThree((s) => {
-    // ugh
-    if (
-      camera != s.camera &&
-      s.controls != controlsRef.current &&
-      !!controlsRef.current
-    ) {
-      setCamera(s.camera, controlsRef.current);
-    }
-  });
-
-  return controlsRef;
-};
-
 const Base = (props: GroupProps) => {
   const { children, ...rest } = props;
   const controlsRef = useAutoOrbitAster();
+  useTravelling();
+
   return (
     <group {...rest}>
       <color attach="background" args={[`rgb(0, 0, 0)`]} />
