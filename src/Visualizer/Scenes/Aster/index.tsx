@@ -18,7 +18,7 @@ import { Nametags } from "./components/Nametags";
 import { InstancedStarField } from "./components/StarField";
 import { useAsterStore } from "./store";
 import { Constellation, StarMetadata } from "./types";
-import { useAutoOrbitAster, useTravelling } from "./util/hooks";
+import { useAutoOrbitAster, useTraveling } from "./util/hooks";
 
 const kEmptyStars: StarMetadata[] = [];
 const kEmptyConstellations: Record<string, Constellation> = {};
@@ -26,7 +26,7 @@ const kEmptyConstellations: Record<string, Constellation> = {};
 const Base = (props: GroupProps) => {
   const { children, ...rest } = props;
   const controlsRef = useAutoOrbitAster();
-  useTravelling();
+  useTraveling();
 
   return (
     <group {...rest}>
