@@ -104,7 +104,7 @@ const generateTravelingCurve = (
 
 export const useTravelling = () => {
   const { camera, controls } = useControlledCamera();
-  const { traveling, traveling_speed } = useAsterStore((s) => ({
+  const { traveling, traveling_speed, setVariable } = useAsterStore((s) => ({
     traveling: s.traveling,
     traveling_speed: s.traveling_speed,
     setVariable: s.setVariable,
@@ -114,7 +114,8 @@ export const useTravelling = () => {
 
   useEffect(() => {
     if (!traveling || !camera || !controls) return;
-    console.log("generating curve");
+    setVariable("orbiting", false);
+
     curve.current = generateTravelingCurve(camera.position, camera.rotation);
 
     let animationFrameId: number;
@@ -142,7 +143,7 @@ export const useTravelling = () => {
       cancelAnimationFrame(animationFrameId);
       controls.enabled = true;
     };
-  }, [traveling, traveling_speed, camera, controls, curve]);
+  }, [traveling, traveling_speed, camera, controls, setVariable]);
 
   return { curve };
 };
