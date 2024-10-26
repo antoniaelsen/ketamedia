@@ -101,7 +101,6 @@ const generateTravelingCurve = (
   ];
   return new CatmullRomCurve3(points, true, "chordal", 0.05);
 };
-
 export const useTraveling = () => {
   const { camera, controls } = useControlledCamera();
   const { traveling, traveling_speed, setVariable } = useAsterStore((s) => ({
@@ -111,37 +110,53 @@ export const useTraveling = () => {
   }));
 
   const curve = useRef<CatmullRomCurve3 | null>(null);
+  const progress = useRef<number>(0);
+  const lastTime = useRef<number | null>(null);
 
   useEffect(() => {
     if (!traveling || !camera || !controls) return;
     setVariable("orbiting", false);
 
     curve.current = generateTravelingCurve(camera.position, camera.rotation);
+    const totalLength = curve.current.getLength();
+    progress.current = 0;
 
     let animationFrameId: number;
-    let t = 0;
 
-    const animate = () => {
-      t += 0.00001 * traveling_speed;
-      if (t > 1) t = 0;
+    const animate = (time: number) => {
+      if (!curve.current) return;
 
-      const position = curve.current!.getPoint(t);
-      camera.position.copy(position);
+      const speed = traveling_speed * 0.1;
+      const delta = time - (lastTime.current || time);
+      lastTime.current = time;
 
-      const tangent = curve.current!.getTangent(t);
-      const lookAtPoint = position.clone().add(tangent);
-      camera.lookAt(lookAtPoint);
+      progress.current += (speed * delta) / 1000;
+      if (progress.current > totalLength) progress.current = 0;
 
-      controls.target.copy(lookAtPoint);
+      const ahead = (progress.current + speed * 0.1) % totalLength;
+
+      const basePoint = curve.current.getUtoTmapping(0, progress.current);
+      const lookAtPoint = curve.current.getUtoTmapping(0, ahead);
+
+      const currentPosition = curve.current.getPoint(basePoint);
+      const targetPosition = curve.current.getPoint(lookAtPoint);
+
+      camera.position.copy(currentPosition);
+      camera.lookAt(targetPosition);
+
+      controls.target.copy(targetPosition);
+      controls.update();
 
       animationFrameId = requestAnimationFrame(animate);
     };
 
-    animate();
+    animationFrameId = requestAnimationFrame(animate);
 
     return () => {
       cancelAnimationFrame(animationFrameId);
       controls.enabled = true;
+      lastTime.current = null;
+      progress.current = 0;
     };
   }, [traveling, traveling_speed, camera, controls, setVariable]);
 

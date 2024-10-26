@@ -27,6 +27,7 @@ export const InstancedStarField = ({
       new MeshStandardMaterial({
         emissive: "rgb(255, 255, 225)",
         emissiveIntensity: 0.25,
+        transparent: true,
       }),
     []
   );
@@ -98,7 +99,7 @@ export const InstancedStarField = ({
     <instancedMesh
       ref={ref}
       args={[geometry, material, stars.length]}
-      frustumCulled={false}
+      frustumCulled={true}
     />
   );
 };

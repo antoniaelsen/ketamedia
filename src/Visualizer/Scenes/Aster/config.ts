@@ -50,7 +50,7 @@ export const CONFIG: Record<string, ConfigProp> = {
   },
   traveling_speed: {
     label: "traveling speed",
-    initial: 1,
+    initial: 10,
     min: 0.1,
     max: 100,
     step: 0.05,
