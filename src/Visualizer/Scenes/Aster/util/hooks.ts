@@ -1,12 +1,26 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useThree } from "@react-three/fiber";
-import { CatmullRomCurve3, Vector3 } from "three";
+import { Camera, CatmullRomCurve3, Euler, Vector3 } from "three";
 
 import { toDegrees } from "util/coordinates";
 import { useAutoOrbit } from "util/hooks/use-auto-orbit";
 import { requestLocation } from "util/location";
 import { useAsterStore, useCamera } from "../store";
 import { gpsToCelestial } from "../util/celestial";
+import { OrbitControls } from "three-stdlib";
+
+const setCameraTarget = (
+  camera: Camera,
+  controls: OrbitControls,
+  position: Vector3,
+  target: Vector3
+) => {
+  camera.position.copy(position);
+  camera.lookAt(target);
+
+  controls.target.copy(target);
+  controls.update();
+};
 
 export const useAutoOrbitAster = () => {
   const { orbiting, orbitLock, orbitWaitMs, setOrbiting, setOrbitLock } =
@@ -62,6 +76,32 @@ export const useControlledCamera = () => {
   return { camera, controls };
 };
 
+const generateTravelingCurve = (
+  currentPosition: Vector3,
+  currentRotation: Euler
+) => {
+  const nPoints = 64;
+  const max = 250;
+  const start = currentPosition.clone();
+  const direction = new Vector3(0, 0, -1).applyEuler(currentRotation);
+  const next = start
+    .clone()
+    .add(direction.multiplyScalar(Math.random() * 10 + 25));
+  const points = [
+    start,
+    next,
+    ...Array.from({ length: nPoints - 2 }, () => {
+      return new Vector3(
+        -max + Math.random() * max * 2,
+        -max + Math.random() * max * 2,
+        -max + Math.random() * max * 2
+      );
+    }),
+    start,
+  ];
+  return new CatmullRomCurve3(points, true, "chordal", 0.05);
+};
+
 export const useTravelling = () => {
   const { camera, controls } = useControlledCamera();
   const { traveling, traveling_speed } = useAsterStore((s) => ({
@@ -70,21 +110,12 @@ export const useTravelling = () => {
     setVariable: s.setVariable,
   }));
 
-  const curve = useMemo(() => {
-    const max = 250;
-    const start = camera?.position.clone() ?? new Vector3(0, 0, 0);
-    const points = Array.from({ length: 10 }, () => {
-      return new Vector3(
-        -max + Math.random() * max * 2,
-        -max + Math.random() * max * 2,
-        -max + Math.random() * max * 2
-      );
-    });
-    return new CatmullRomCurve3([start, ...points, start], true);
-  }, [camera]);
+  const curve = useRef<CatmullRomCurve3 | null>(null);
 
   useEffect(() => {
     if (!traveling || !camera || !controls) return;
+    console.log("generating curve");
+    curve.current = generateTravelingCurve(camera.position, camera.rotation);
 
     let animationFrameId: number;
     let t = 0;
@@ -93,10 +124,10 @@ export const useTravelling = () => {
       t += 0.00001 * traveling_speed;
       if (t > 1) t = 0;
 
-      const position = curve.getPoint(t);
+      const position = curve.current!.getPoint(t);
       camera.position.copy(position);
 
-      const tangent = curve.getTangent(t);
+      const tangent = curve.current!.getTangent(t);
       const lookAtPoint = position.clone().add(tangent);
       camera.lookAt(lookAtPoint);
 
@@ -116,6 +147,24 @@ export const useTravelling = () => {
   return { curve };
 };
 
+export const useOnSol = () => {
+  const { setVariable } = useAsterStore((s) => ({
+    setVariable: s.setVariable,
+  }));
+  const { camera, controls } = useControlledCamera();
+
+  return useCallback(async () => {
+    if (!camera || !controls) {
+      return;
+    }
+
+    setVariable("orbiting", false);
+    setVariable("traveling", false);
+
+    setCameraTarget(camera, controls, new Vector3(-1, 0, 0), new Vector3());
+  }, [camera, controls, setVariable]);
+};
+
 export const useOnZenith = () => {
   const { setVariable } = useAsterStore((s) => ({
     setVariable: s.setVariable,
@@ -129,6 +178,9 @@ export const useOnZenith = () => {
 
     try {
       const position = await requestLocation();
+
+      setVariable("orbiting", false);
+      setVariable("traveling", false);
 
       const { latitude, longitude } = position.coords;
       const { ra, dec } = gpsToCelestial(latitude, longitude);
@@ -144,17 +196,8 @@ export const useOnZenith = () => {
       const z = radius * Math.sin(dec);
       const lookAtPosition = new Vector3(x, y, z);
 
-      // Set camera position to origin
-      camera.position.set(0, 0, 0);
-
-      camera.up.set(0, 0, 1); // Set z as up
-      camera.lookAt(lookAtPosition);
-
-      controls.target.copy(lookAtPosition);
-
-      controls.update();
-
-      setVariable("orbiting", false);
+      camera.up.set(0, 0, 1);
+      setCameraTarget(camera, controls, new Vector3(), lookAtPosition);
     } catch (error) {
       console.error("Error getting location", error);
     }

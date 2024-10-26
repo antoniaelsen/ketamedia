@@ -18,7 +18,7 @@ export const CONFIG: Record<string, ConfigProp> = {
   // },
   traveling: {
     label: "traveling",
-    initial: false,
+    initial: true,
   },
   skyculture: {
     label: "skyculture",
@@ -26,7 +26,7 @@ export const CONFIG: Record<string, ConfigProp> = {
   },
   show_asterisms: {
     label: "show constellations",
-    initial: true,
+    initial: false,
   },
   show_asterism_nametags: {
     label: "show constellation nametags",

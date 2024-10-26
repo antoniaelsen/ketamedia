@@ -133,15 +133,15 @@ const Scene = ({
         )}
       </Base>
       <EffectComposer>
-        <Bloom luminanceThreshold={0} luminanceSmoothing={1} height={300} />
+        <Bloom luminanceThreshold={0} luminanceSmoothing={1} height={500} />
         <GodRays
           sun={sol as any}
           blendFunction={BlendFunction.SCREEN}
           samples={60}
           density={1}
-          decay={0.5}
+          decay={0.8}
           weight={1}
-          exposure={0.6}
+          exposure={0.9}
           clampMax={1}
           kernelSize={KernelSize.SMALL}
           blur={true}

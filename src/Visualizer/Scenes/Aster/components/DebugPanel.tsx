@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { kSkycultureUrls } from "../api/stellarium";
 import { humanize } from "util/string";
-import { useOnZenith } from "../util/hooks";
+import { useOnSol, useOnZenith } from "../util/hooks";
 
 const kSkycultureOptions = Object.keys(kSkycultureUrls).map((key) => ({
   label: humanize(key),
@@ -21,6 +21,7 @@ const kSkycultureOptions = Object.keys(kSkycultureUrls).map((key) => ({
 export const DebugPanel = () => {
   const state = useAsterStore((s) => s);
   const { skyculture, setVariable } = state;
+  const onSol = useOnSol();
   const onZenith = useOnZenith();
 
   return (
@@ -51,9 +52,14 @@ export const DebugPanel = () => {
         </Stack>
       }
       footer={
-        <Button size="small" onClick={onZenith}>
-          Zenith
-        </Button>
+        <Stack spacing={1}>
+          <Button size="small" onClick={onSol}>
+            Sol
+          </Button>
+          <Button size="small" onClick={onZenith}>
+            Zenith
+          </Button>
+        </Stack>
       }
     />
   );
