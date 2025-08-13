@@ -3,7 +3,7 @@ import { ConfigProp } from "types";
 export const CONFIG: Record<string, ConfigProp> = {
   orbiting: {
     label: "orbiting",
-    initial: false,
+    initial: true,
   },
   // orbit_lock: {
   //   label: "orbit lock",
@@ -18,7 +18,7 @@ export const CONFIG: Record<string, ConfigProp> = {
   // },
   traveling: {
     label: "traveling",
-    initial: true,
+    initial: false,
   },
   skyculture: {
     label: "skyculture",

@@ -5,15 +5,15 @@ import { Constellation } from "../types";
 export const kSkycultureUrls = {
   modern_st: {
     graphs:
-      "https://raw.githubusercontent.com/Stellarium/stellarium/refs/heads/master/skycultures/modern_st/constellationship.fab",
+      "https://raw.githubusercontent.com/Stellarium/stellarium/refs/tags/v24.4/skycultures/modern_st/constellationship.fab",
     names:
-      "https://raw.githubusercontent.com/Stellarium/stellarium/refs/heads/master/skycultures/modern_st/constellation_names.eng.fab",
+      "https://raw.githubusercontent.com/Stellarium/stellarium/refs/tags/v24.4/skycultures/modern_st/constellation_names.eng.fab",
   },
   modern_rey: {
     graphs:
-      "https://raw.githubusercontent.com/Stellarium/stellarium/refs/heads/master/skycultures/modern_rey/constellationship.fab",
+      "https://raw.githubusercontent.com/Stellarium/stellarium/refs/tags/v24.4/skycultures/modern_rey/constellationship.fab",
     names:
-      "https://raw.githubusercontent.com/Stellarium/stellarium/refs/heads/master/skycultures/modern_rey/constellation_names.eng.fab",
+      "https://raw.githubusercontent.com/Stellarium/stellarium/refs/tags/v24.4/skycultures/modern_rey/constellation_names.eng.fab",
   },
 };
 
