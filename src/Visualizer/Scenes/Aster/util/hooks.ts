@@ -133,13 +133,14 @@ export const useTraveling = () => {
       progress.current += (speed * delta) / 1000;
       if (progress.current > totalLength) progress.current = 0;
 
-      const ahead = (progress.current + speed * 0.1) % totalLength;
+      const lookAheadDistance = Math.min(totalLength * 0.05, 20);
+      const ahead = (progress.current + lookAheadDistance) % totalLength;
 
-      const basePoint = curve.current.getUtoTmapping(0, progress.current);
-      const lookAtPoint = curve.current.getUtoTmapping(0, ahead);
+      const basePoint = progress.current / totalLength;
+      const lookAtPoint = ahead / totalLength;
 
-      const currentPosition = curve.current.getPoint(basePoint);
-      const targetPosition = curve.current.getPoint(lookAtPoint);
+      const currentPosition = curve.current.getPointAt(basePoint);
+      const targetPosition = curve.current.getPointAt(lookAtPoint);
 
       camera.position.copy(currentPosition);
       camera.lookAt(targetPosition);
