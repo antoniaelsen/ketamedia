@@ -15,7 +15,7 @@ import { getColorFromBV } from "../util/celestial";
 
 export const InstancedStarField = ({
   stars,
-  scale = 1,
+  scale = 0.05,
 }: {
   stars: StarMetadata[];
   scale?: number;
@@ -26,15 +26,12 @@ export const InstancedStarField = ({
     () =>
       new MeshStandardMaterial({
         emissive: "rgb(255, 255, 225)",
-        emissiveIntensity: 0.25,
+        emissiveIntensity: 0.5,
         transparent: false,
       }),
     []
   );
-  const geometry = useMemo(
-    () => new SphereGeometry(scale / 10, 24, 24),
-    [scale]
-  );
+  const geometry = useMemo(() => new SphereGeometry(scale, 24, 24), [scale]);
 
   useEffect(() => {
     if (!ref.current) return;

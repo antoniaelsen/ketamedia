@@ -101,6 +101,7 @@ const generateTravelingCurve = (
   ];
   return new CatmullRomCurve3(points, true, "chordal", 0.05);
 };
+
 export const useTraveling = () => {
   const { camera, controls } = useControlledCamera();
   const { traveling, traveling_speed, setVariable } = useAsterStore((s) => ({

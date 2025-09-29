@@ -18,7 +18,7 @@ export const CONFIG: Record<string, ConfigProp> = {
   // },
   traveling: {
     label: "traveling",
-    initial: false,
+    initial: true,
   },
   skyculture: {
     label: "skyculture",
@@ -44,6 +44,13 @@ export const CONFIG: Record<string, ConfigProp> = {
     label: "show star nametags",
     initial: false,
   },
+  scale_stars: {
+    label: "scale stars",
+    initial: 0.05,
+    min: 0.01,
+    max: 0.1,
+    step: 0.01,
+  },
   scale_nametags: {
     label: "scale nametags",
     initial: false,
@@ -52,7 +59,7 @@ export const CONFIG: Record<string, ConfigProp> = {
     label: "traveling speed",
     initial: 10,
     min: 0.1,
-    max: 100,
+    max: 200,
     step: 0.05,
   },
 };

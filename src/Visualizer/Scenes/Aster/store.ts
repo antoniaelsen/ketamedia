@@ -3,6 +3,7 @@ import { OrbitControls } from "three-stdlib";
 import { CONFIG } from "./config";
 import { kSkycultureUrls } from "./api/stellarium";
 import { DebugValue } from "types";
+import { StarMetadata } from "./types";
 
 export interface AsterState {
   camera: THREE.Camera | null;
