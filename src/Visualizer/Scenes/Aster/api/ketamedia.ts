@@ -2,6 +2,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { StarMetadata } from "../types";
 
 const kUrlStars = [
+  // "https://raw.githubusercontent.com/antoniaelsen/ketamedia/refs/heads/main/src/Visualizer/Scenes/Aster/hyglike_from_athyg_24.json",
   "https://raw.githubusercontent.com/antoniaelsen/ketamedia/refs/heads/feature/aster-better-loading/src/Visualizer/Scenes/Aster/hyglike_from_athyg/hyglike_from_athyg-0.json",
   "https://raw.githubusercontent.com/antoniaelsen/ketamedia/refs/heads/feature/aster-better-loading/src/Visualizer/Scenes/Aster/hyglike_from_athyg/hyglike_from_athyg-1.json",
   "https://raw.githubusercontent.com/antoniaelsen/ketamedia/refs/heads/feature/aster-better-loading/src/Visualizer/Scenes/Aster/hyglike_from_athyg/hyglike_from_athyg-2.json",
@@ -26,7 +27,9 @@ const getStars = async (queryClient: any): Promise<StarMetadata[]> => {
   // Fetch all URLs in parallel
   const fetchPromises = kUrlStars.map(async (url) => {
     try {
+      console.log("fetching", url);
       const response = await fetch(url);
+      console.log("fetched", url);
       const stars: StarMetadata[] = await response.json();
 
       // Update cache with accumulated data as each response comes in

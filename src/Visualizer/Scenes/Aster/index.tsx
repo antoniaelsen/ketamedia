@@ -58,7 +58,16 @@ const Scene = ({
     show_star_nametags,
     scale_nametags,
   } = useAsterStore();
-  const { data: stars } = useStars();
+  const { data: stars, isLoading, isFetched } = useStars();
+  console.log(
+    "stars",
+    "loading: ",
+    isLoading,
+    "fetched: ",
+    isFetched,
+    "stars: ",
+    stars
+  );
   const { data: constellations } = useConstellations(skyculture);
   const isMobile = getIsMobile();
 

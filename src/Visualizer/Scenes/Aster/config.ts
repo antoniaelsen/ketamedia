@@ -46,7 +46,7 @@ export const CONFIG: Record<string, ConfigProp> = {
   },
   scale_stars: {
     label: "scale stars",
-    initial: 0.05,
+    initial: 0.1,
     min: 0.01,
     max: 0.1,
     step: 0.01,
